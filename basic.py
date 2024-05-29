@@ -1,7 +1,7 @@
 import openai
 import gradio
 
-openai.api_key = "sk-proj-BGNmsF6ss19Qlj14k1IaT3BlbkFJAWa4UA9FtQfL9AwClvmr"
+openai.api_key = "sk-satwik-key-djba3xyeqb7mUl5NQKRyT3BlbkFJWDwHuEDcrA7sW9c33jML"
 
 messages = [{"role": "system", "content": "You are a student revision assistant"}]
 
