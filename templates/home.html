@@ -1,0 +1,53 @@
+{% load static %}
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+</head>
+<body>
+{% block content %}
+{% if user.is_authenticated %}
+<ul>
+	<li>
+		<a class="nav-link" href="#" 
+    		onClick="document.getElementById('logout_form').submit()">
+    		LOGOUT
+  		</a>
+	</li>
+	<li>
+		<a class="nav-link" href="#">
+    		CHATBOT
+  		</a>
+	</li>
+	<li>
+		<a class="nav-link" href="ocr">
+    		OCR
+  		</a>
+	</li>
+</ul>
+<form action="{% url 'logout' %}" method="post" id="logout_form">
+	{% csrf_token %}
+ 	<input type="hidden">
+</form>
+<h1>Hello {{ user.username }}!</h1>
+<form action="" method="post">
+	{% csrf_token %}
+	<textarea id="text_input" placeholder="What is your question?" name="user_request"></textarea>
+	<div id="question"><button type="submit" id="ask_question">Ask question!</button></div>
+</form>
+{% if chatbot_response %}
+<p id="user_question">{{user_request}}</p>
+<p id="chatbot_answer">{{chatbot_response}}</p>
+{% endif %}
+{% endif %}
+{% endblock %}
+<script>
+	var input = document.getElementById("text_input");
+	input.addEventListener("keypress", function(event) {
+	  if (event.key === "Enter") {
+	    event.preventDefault();
+	    document.getElementById("ask_question").click();
+	  }
+	});
+</script>
+</body>
+</html>

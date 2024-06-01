@@ -1,0 +1,5 @@
+django==5.0.6
+psycopg2==2.9.9
+opencv-python==4.9.0.80
+openai==1.30.5
+pytesseract==0.3.10

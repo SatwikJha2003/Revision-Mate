@@ -1,0 +1,53 @@
+{% load static %}
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/ocr.css' %}">
+</head>
+<body>
+{% block content %}
+{% if user.is_authenticated %}
+<ul>
+	<li>
+		<a class="nav-link" href="#" 
+    		onClick="document.getElementById('logout_form').submit()">
+    		LOGOUT
+  		</a>
+	</li>
+	<li>
+		<a class="nav-link" href="/">
+    		CHATBOT
+  		</a>
+	</li>
+	<li>
+		<a class="nav-link" href="#">
+    		OCR
+  		</a>
+	</li>
+</ul>
+<form action="{% url 'logout' %}" method="post" id="logout_form">
+	{% csrf_token %}
+ 	<input type="hidden">
+</form>
+<h1>Revision Mate OCR</h1>
+<form action="ocr" method="post">
+	{% csrf_token %}
+	<textarea id="text_input" placeholder="Enter filepath of JPG here (case-sensitive)" name="filepath"></textarea>
+	<div id="get_text"><button type="submit" id="get_text_button">Get text!</button></div>
+</form>
+{% if text_from_image %}
+<div><img src="{% static 'images/ocr.jpg' %}"></div>
+<div><p id="text_from_image">{{text_from_image}}</p></div>
+{% endif %}
+{% endif %}
+{% endblock %}
+<script>
+	var input = document.getElementById("text_input");
+	input.addEventListener("keypress", function(event) {
+	  if (event.key === "Enter") {
+	    event.preventDefault();
+	    document.getElementById("get_text_button").click();
+	  }
+	});
+</script>
+</body>
+</html>

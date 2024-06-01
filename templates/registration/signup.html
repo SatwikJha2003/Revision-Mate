@@ -1,0 +1,26 @@
+{% load static %}
+<html>
+<head>
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+</head>
+<body>
+{% block title %}<h1>SIGNUP</h1>{% endblock %}
+{% block content %}
+{% if form.errors %}
+  <p>There was an error. Make sure your passwords match and they meet the requirement.</p>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <h2 class="signup-text">USERNAME</h2>
+  <div class="signup-form">{{ form.username }}</div>
+  <p>-Password must be at least 8 characters long</p>
+  <p>-Password must be alphanumeric</p>
+  <h2 class="signup-text">PASSWORD</h2>
+  <div class="signup-form">{{ form.password1 }}</div>
+  <h2 class="signup-text">RECONFIRM PASSWORD</h2>
+  <div class="signup-form">{{ form.password2 }}</div>
+  <div><button type="submit">Signup</button></div>
+</form>
+{% endblock %}
+</body>
+</html>

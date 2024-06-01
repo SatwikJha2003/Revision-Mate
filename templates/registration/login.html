@@ -1,0 +1,26 @@
+{% load static %}
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+</head>
+<body>
+{% block title %}<h1>REVISION MATE</h1>{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+    <h2 class="login-text">Credentials incorrect</h2>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <h2 class="login-text">USERNAME</p>
+  <div class="login-form">{{ form.username }}</div>
+  <h2 class="login-text">PASSWORD</p>
+  <div class="login-form">{{ form.password }}</div>
+  <div><button type="submit">Log In</button></div>
+</form>
+<form method="get" action="../signup">
+  <div><button type="submit">Register</button></div>
+</form>
+{% endblock %}
+</body>
+</html>

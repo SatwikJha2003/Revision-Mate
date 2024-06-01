@@ -1,0 +1,93 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:300);
+
+body {
+  height: 100%;
+  background-color: #2f56e0;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Lato", sans-serif;
+}
+
+h1 {
+  color: white;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: 500%;
+}
+
+textarea {
+  width: 500px;
+  height: 150px;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  resize: none;
+}
+
+p {
+	color: white;
+	font-weight: bold;
+  font-size: 200%;
+}
+
+button {
+    font-family: "Lato", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #9ea8a1;
+    width: 8%;
+    border: 0;
+    margin-top: 10px;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+  background-color: #9ea8a1;
+  overflow: hidden;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  color: white;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 200%;
+}
+
+li a:hover {
+  background-color: lightblue;
+}
+
+#logout {
+	margin: 0;
+}
+
+#question {
+	text-align: center;
+}
+
+#user_question {
+  padding-left: 1%;
+}
+
+#chatbot_answer {
+  text-align: right;
+  padding-right: 1%;
+}
+
+.nav-link {
+  text-decoration: none;
+}
