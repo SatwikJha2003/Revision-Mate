@@ -8,7 +8,7 @@ Revision Mate
 - This was designed for Windows OS
 
 # Requirements
-- Install PostgreSQL. Password is 12345. You can change settings in revision_mate\settings.py under DATABASES
+- Install PostgreSQL. Set password and create a database. 
 - pip install django
 - pip install psycopg2
 - pip install openai
@@ -21,6 +21,24 @@ Revision Mate
 
 # Run
 - Run in a virtual environment (optional but recommended)
+- Change settings for database in revision_mate\settings.py under DATABASES if needed
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dbtest',  # Change to your database name
+        'USER': 'postgres',  # Change to your PostgreSQL user
+        'PASSWORD': '12345',  # Change to the password you set
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
+    #}
+}
+```
+- run ```python manage.py migrate```
 - In the file revision_mate\views.py, change the filepath
 - python manage.py runserver
 
