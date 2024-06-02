@@ -40,7 +40,7 @@ DATABASES = {
 ```
 - run ```python manage.py migrate```
 - In the file revision_mate\views.py, change the filepath
-- python manage.py runserver
+- run ```python manage.py runserver```
 
 # Video
 https://drive.google.com/file/d/1MaOoBwDDRyzBzlxEY6yya-xqcrCuIpl6/view
