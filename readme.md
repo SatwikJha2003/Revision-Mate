@@ -39,7 +39,7 @@ DATABASES = {
 }
 ```
 - run ```python manage.py migrate```
-- In the file revision_mate/views.py, change the filepath
+- In the file revision_mate/views.py, change the filepath for Tesseract
 - run ```python manage.py runserver```
 
 # Video
