@@ -9,6 +9,7 @@ import shutil
 
 client = openai.OpenAI(api_key="<Your key here>")
 
+# Chatbot feature
 @login_required(login_url="accounts/login")
 def chatbot(request):
     messages = [{"role": "system", "content": "You are a student revision assistant"}]
@@ -25,6 +26,7 @@ def chatbot(request):
     chatbot_response = {'user_request':user_request,'chatbot_response':chat_response}
     return render(request, 'home.html', chatbot_response)
 
+# OCR feature
 @login_required(login_url="accounts/login")
 def ocr(request):
     username = os.environ.get('USERNAME')
@@ -41,6 +43,7 @@ def ocr(request):
             pytesseract.pytesseract.tesseract_cmd = r'C:\Users\{}\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'.format(username)
             text_from_image = pytesseract.image_to_string(Image.open(temp_file))
             os.remove(temp_file)
+            # Copy image to render in web page
             shutil.copyfile(filepath, "static\\images\\ocr.jpg")
         except:
             text_from_image = "Oops! Looks like the file does not exist! Your last successful image is show above."
