@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Flashcards
+from .models import Users, Flashcards
 
 # Register your models here.
+admin.site.register(Users)
 admin.site.register(Flashcards)
+

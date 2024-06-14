@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Flashcards
+from .models import Users, Flashcards
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = ('username', 'password1', 'password2')
 
 class FlashcardSerializer(serializers.ModelSerializer):
     class Meta:
