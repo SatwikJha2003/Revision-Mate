@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../features/manageAccount";
 import axios from "axios";
@@ -7,6 +7,7 @@ import CSRF from "../components/csrfGetter"
 function Login() {
 
   const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleForm = (event) => {
     event.preventDefault();
@@ -16,13 +17,17 @@ function Login() {
         "Content-Type": "multipart/form-data",
         "X-CSRFToken": formData.get("csrf-token")
       }
-    }).then(response => console.log(response))
-    .then(dispatch(
-      login({
-        name: "hello",
-        loggedIn: true
-      })
-    ));
+    }).then(response => {
+      if (response.data === "Success") {
+        dispatch(login({
+          name: "hello",
+          loggedIn: true
+          })
+        )
+      }
+      else
+        setErrorMessage(response.data);
+    });
   }
 
   return (
@@ -33,6 +38,7 @@ function Login() {
         <input type="password" name="password"/><br/>
         <button type="submit">Submit<br/></button>
       </form>
+      <div>{errorMessage}</div>
     </div>
   );
 }

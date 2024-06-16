@@ -4,6 +4,29 @@ from PIL import Image
 import os
 from pathlib import Path
 
+# Password strength checker
+def check_password_strength(password):
+	has_alpha = False
+	has_num = False
+	has_special = False
+	# From OWASP https://owasp.org/www-community/password-special-characters
+	special_chars = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+	# Length of password
+	if len(password) < 8:
+		return (False,"Length of password is too short!")
+	# Complexity of password
+	for c in password:
+		if c.isalpha():
+			has_alpha = True
+		elif c.isnumeric():
+			has_num = True
+		elif c in special_chars:
+			has_special = True
+	if has_alpha and has_num and has_special:
+		return (True,"Success")
+	else:
+		return (False,"Password should have at least 1 alphabet, 1 digit and 1 special character!")
+
 # OCR function
 def get_text_from_image():
 	pytesseract.pytesseract.tesseract_cmd = r'C:\Users\chngw\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'

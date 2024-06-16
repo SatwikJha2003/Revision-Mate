@@ -6,8 +6,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer, FlashcardSerializer, FileUploadSerializer
-from .models import Users, Flashcards
+from .serializers import UserSerializer, DeckSerializer, FlashcardSerializer, FileUploadSerializer
+from .models import Users, Deck, Flashcard
 from . import utils
 
 # Create your views here.
@@ -36,15 +36,19 @@ class RegisterView(viewsets.ViewSet):
         password1 = user_info['password_one']
         password2 = user_info['password_two']
 
-        if password1 == password2:
-            new_user = User.objects.create_user(username,email,password1)
-            new_user.save()
-            new_user = User.objects.get(id=new_user.id)
-            user = Users(user=new_user, first_name=first_name, last_name=last_name)
-            user.save()
-            return Response("Okay")
-        else:
-            return Response("Passwords are different")
+        if password1 != password2:
+            return Response("Passwords are different!")
+
+        password_check = utils.check_password_strength(password1)
+        if not password_check[0]:
+            return Response(password_check[1])
+
+        new_user = User.objects.create_user(username,email,password1)
+        new_user.save()
+        new_user = User.objects.get(id=new_user.id)
+        user = Users(user=new_user, first_name=first_name, last_name=last_name)
+        user.save()
+        return Response(password_check[1])
 
 @method_decorator(csrf_protect, name='dispatch')
 class LoginView(viewsets.ViewSet):
@@ -60,9 +64,9 @@ class LoginView(viewsets.ViewSet):
 
         if user:
             login(request,user)
-            return Response("Login")
+            return Response("Success")
         else:
-            return Response("Not login")
+            return Response("Credentials incorrect!")
 
 class LogoutView(viewsets.ViewSet):
 
@@ -81,8 +85,25 @@ class CSRFToken(APIView):
         return Response("CSRF set")
 
 class FlashcardsView(viewsets.ModelViewSet):
+    permission = (permissions.AllowAny, )
     serializer_class = FlashcardSerializer
-    queryset = Flashcards.objects.all()
+    queryset = Flashcard.objects.all()
+
+    def list(self, request):
+        flashcards = Flashcard.objects.all()
+        flashcards = FlashcardSerializer(flashcards, many=True)
+        return Response(flashcards.data)
+
+
+@method_decorator(csrf_protect, name='dispatch')
+class DecksView(viewsets.ModelViewSet):
+    serializer_class = DeckSerializer
+
+    def create(self, request):
+        deck_name = request.data['deck_name']
+        deck = Deck(deck_id=deck_name, deck_name=deck_name, owner=request.user)
+        deck.save()
+        return(Response(deck_name))
 
 class FileUploadView(viewsets.ViewSet):
     serializer_class = FileUploadSerializer
