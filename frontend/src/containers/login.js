@@ -10,19 +10,19 @@ function Login() {
 
   const handleForm = (event) => {
     event.preventDefault();
-    dispatch(
-      login({
-        name: "hello",
-        loggedIn: true
-      })
-    )
     var formData = new FormData(event.target);
     axios.post("/login/", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         "X-CSRFToken": formData.get("csrf-token")
       }
-    }).then(response => console.log(response));
+    }).then(response => console.log(response))
+    .then(dispatch(
+      login({
+        name: "hello",
+        loggedIn: true
+      })
+    ));
   }
 
   return (

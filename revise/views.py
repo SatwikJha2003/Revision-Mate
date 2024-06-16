@@ -29,16 +29,18 @@ class RegisterView(viewsets.ViewSet):
     def create(self, request):
         user_info = request.data
 
+        first_name = user_info['first_name']
+        last_name = user_info['last_name']
         username = user_info['username']
         email = user_info['email']
-        password1 = user_info['password1']
-        password2 = user_info['password2']
+        password1 = user_info['password_one']
+        password2 = user_info['password_two']
 
         if password1 == password2:
             new_user = User.objects.create_user(username,email,password1)
             new_user.save()
             new_user = User.objects.get(id=new_user.id)
-            user = Users(user=new_user, first_name='', last_name='')
+            user = Users(user=new_user, first_name=first_name, last_name=last_name)
             user.save()
             return Response("Okay")
         else:
