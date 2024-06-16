@@ -16,7 +16,7 @@ function Register() {
         "X-CSRFToken": formData.get("csrf-token")
       }
     }).then(response => {
-      if (response.data === "Okay")
+      if (response.data === "Success")
         navigate("/login");
       else
         setErrorMessage(response.data);

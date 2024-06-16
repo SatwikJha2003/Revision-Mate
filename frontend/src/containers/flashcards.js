@@ -1,5 +1,6 @@
 import '../flashcards.css';
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/manageAccount";
 import axios from "axios"; 
@@ -11,8 +12,10 @@ function Flashcards() {
   const [isShuffled, setShuffled] = useState(false);
   const [index, setIndex] = useState(0);
   const isLoggedIn = useSelector(selectUser);
+  const [searchparams] = useSearchParams();
 
   useEffect(() => {
+    console.log(searchparams.get("deck"));
     axios.get("/flashcards")
      .then((response) => {
         var cards = response.data;

@@ -9,6 +9,7 @@ import store from "./store";
 import Login from "./containers/login";
 import Register from "./containers/register";
 import Logout from "./containers/logout";
+import Deck from "./containers/deck";
 import Flashcards from "./containers/flashcards";
 import NavBar from "./components/navbar";
 
@@ -24,6 +25,7 @@ function App() {
             <Route exact path="/" element="App.js" />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/deck" element={<Deck />} />
             <Route path="/flashcards" element={<Flashcards />} />
             <Route path="/logout" element={<Logout />}/>
           </Routes>
