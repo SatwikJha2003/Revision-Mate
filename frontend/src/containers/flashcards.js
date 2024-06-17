@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../features/manageAccount";
 import axios from "axios"; 
 import Redirect from "../components/redirect";
+import CSRF from "../components/csrfGetter";
 
 function Flashcards() {
   const [cards, setCards] = useState([]);
@@ -26,7 +27,6 @@ function Flashcards() {
           cards[random_i] = temp;
         }
         setCards(cards);
-        console.log(cards[0])
      });
   }, []);
 
@@ -54,6 +54,17 @@ function Flashcards() {
   // Go to previous question
   const goPrevious = () => {
     setIndex((index - 1 + cards.length) % cards.length);
+  }
+
+  const handleForm = (event) => {
+    event.preventDefault();
+    var formData = new FormData(event.target);
+    axios.post("/flashcards/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "X-CSRFToken": formData.get("csrf-token")
+      }
+    })
   }
 
   if (!isLoggedIn)

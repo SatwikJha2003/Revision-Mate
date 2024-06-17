@@ -14,7 +14,7 @@ class DeckSerializer(serializers.ModelSerializer):
 class FlashcardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flashcard
-        fields = ('id', 'question', 'answer')
+        fields = ('question', 'answer')
 
 class FileUploadSerializer(serializers.Serializer):
     uploaded_file = serializers.FileField()

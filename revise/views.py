@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
@@ -90,26 +91,37 @@ class FlashcardsView(viewsets.ModelViewSet):
     queryset = Flashcard.objects.all()
 
     def list(self, request):
-        flashcards = Flashcard.objects.all()
+        flashcards = Flashcard.objects.all().filter(owner=request.user.id)
         flashcards = FlashcardSerializer(flashcards, many=True)
         return Response(flashcards.data)
 
+    def create(self, request):
+        question = request.data["question"]
+        answer = request.data["answer"]
+        flashcard = Flashcard(question=question,answer=answer,owner=request.user)
+        flashcard.save()
+        return Response("Success!")
 
 @method_decorator(csrf_protect, name='dispatch')
 class DecksView(viewsets.ModelViewSet):
     serializer_class = DeckSerializer
 
     def create(self, request):
-        deck_name = request.data['deck_name']
-        deck = Deck(deck_id=deck_name, deck_name=deck_name, owner=request.user)
-        deck.save()
-        return(Response(deck_name))
+        try:
+            deck_name = request.data['deck_name']
+            if deck_name == "":
+                return Response("Deck name cannot be empty!")
+
+            deck = Deck(deck_name=deck_name, owner=request.user)
+            deck.save()
+            return Response("Success!")
+        except IntegrityError:
+            return Response("You already have a deck of this name!")
 
 class FileUploadView(viewsets.ViewSet):
     serializer_class = FileUploadSerializer
 
     def list(self, request):
-        print("hello")
         return Response("Get API")
 
     def create(self, request):
