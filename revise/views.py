@@ -91,20 +91,36 @@ class FlashcardsView(viewsets.ModelViewSet):
     queryset = Flashcard.objects.all()
 
     def list(self, request):
+        print(request.query_params["deck_name"])
+        deck_name = request.query_params["deck_name"]
+        if deck_name:
+            deck = Deck.objects.get(deck_name=deck_name, owner=request.user.id)
+            flashcards = deck.flashcard_set.all()
+            flashcards = FlashcardSerializer(flashcards, many=True)
+            return Response(flashcards.data)
+
         flashcards = Flashcard.objects.all().filter(owner=request.user.id)
         flashcards = FlashcardSerializer(flashcards, many=True)
         return Response(flashcards.data)
 
     def create(self, request):
+        deck_name = request.data["deck_name"]
         question = request.data["question"]
         answer = request.data["answer"]
+        deck = Deck.objects.get(deck_name=deck_name, owner=request.user.id)
         flashcard = Flashcard(question=question,answer=answer,owner=request.user)
         flashcard.save()
+        flashcard.deck.add(deck)
         return Response("Success!")
 
 @method_decorator(csrf_protect, name='dispatch')
 class DecksView(viewsets.ModelViewSet):
     serializer_class = DeckSerializer
+
+    def list(self, request):
+        decks = Deck.objects.all().filter(owner=request.user.id)
+        decks = DeckSerializer(decks, many=True)
+        return Response(decks.data)
 
     def create(self, request):
         try:
@@ -117,6 +133,12 @@ class DecksView(viewsets.ModelViewSet):
             return Response("Success!")
         except IntegrityError:
             return Response("You already have a deck of this name!")
+
+    def delete(self, request):
+        print(request.data["deck_name"])
+        deck_name = request.data["deck_name"]
+        deck_id = Deck.objects.filter(deck_name=deck_name, owner_id=request.user.id).delete()
+        return Response("Success!")
 
 class FileUploadView(viewsets.ViewSet):
     serializer_class = FileUploadSerializer
@@ -141,4 +163,4 @@ class DeleteUserView(viewsets.ViewSet):
     def delete(self, request):
         user = self.request.user
         user = User.objects.filter(id=user.id).delete()
-        return Response("Deleted")
+        return Response("Success!")

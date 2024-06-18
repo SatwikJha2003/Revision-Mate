@@ -9,26 +9,35 @@ import CSRF from "../components/csrfGetter";
 
 function Flashcards() {
   const [cards, setCards] = useState([]);
+  const [decks, setDecks] = useState([]);
+  const [deckName, setDeckName] = useState("");
+  const [isShowDeck, setShowDeck] = useState(false);
   const [isQuestionSide, setQuestionSide] = useState(true);
   const [isShuffled, setShuffled] = useState(false);
   const [index, setIndex] = useState(0);
   const isLoggedIn = useSelector(selectUser);
   const [searchparams] = useSearchParams();
 
-  useEffect(() => {
-    console.log(searchparams.get("deck"));
-    axios.get("/flashcards")
+  const getDecks = () => {
+    axios.get("/decks")
      .then((response) => {
-        var cards = response.data;
-        for (var i = 0; i < cards.length; i++) {
-          var random_i = Math.floor(Math.random() * (i+1));
-          var temp = cards[i];
-          cards[i] = cards[random_i];
-          cards[random_i] = temp;
-        }
-        setCards(cards);
+        setDecks([...response.data]);
      });
-  }, []);
+  }
+
+  const handleDeckLink = (event) => {
+    const deck_name = event.target.getAttribute("value");
+    setDeckName(event.target.getAttribute("value"));
+  }
+
+  const handleDeckForm = (event) => {
+    event.preventDefault();
+    axios.get("/flashcards", {
+      params: {deck_name:deckName}
+    }).then(response => {
+      console.log(response.data);
+    });
+  }
 
   // Function to shuffle cards array
   const shuffle = () => {
@@ -56,19 +65,30 @@ function Flashcards() {
     setIndex((index - 1 + cards.length) % cards.length);
   }
 
-  const handleForm = (event) => {
-    event.preventDefault();
-    var formData = new FormData(event.target);
-    axios.post("/flashcards/", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "X-CSRFToken": formData.get("csrf-token")
-      }
-    })
-  }
+  /*Get user's decks*/
+  useEffect(() => {
+    getDecks();
+  }, []);
+
+  const deckList = decks.map(deck => <li key={deck.id} 
+                                      onClick={handleDeckLink}
+                                      value={deck.deck_name}
+                                      className={"deck" + (deckName === deck.deck_name ? "-selected":"")}
+                                     >{deck.deck_name}</li>);
 
   if (!isLoggedIn)
     return <Redirect />;
+
+  if (!isShowDeck)
+    return (
+      <div>
+        <ul>{deckList}</ul>
+        <form id="deck_form" onSubmit={handleDeckForm}>
+          <CSRF />
+          <button type="submit">Use deck<br/></button>
+        </form>
+      </div>
+    )
 
   return (
     <div>

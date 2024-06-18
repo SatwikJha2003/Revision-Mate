@@ -38,6 +38,10 @@
 }
 
 .answer-side {
-  background-color: red;
-  transform: rotateY(180deg);
+    background-color: red;
+    transform: rotateY(180deg);
+}
+
+.deck-selected {
+    font-weight: bold;
 }

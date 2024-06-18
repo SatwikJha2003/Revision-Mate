@@ -10,10 +10,25 @@ import Redirect from "../components/redirect";
 function Deck() {
   const isLoggedIn = useSelector(selectUser);
   const navigate = useNavigate();
+  const [decks, setDecks] = useState([]);
   const [isCardMaker, setCardMaker] = useState(false);
   const [deckName, setDeckName] = useState("");
   const [helpMessage, setHelpMessage] = useState("");
-  const [textareaValue, setTextareaValue] = useState("");
+  const [questionValue, setQuestionValue] = useState("");
+  const [answerValue, setAnswerValue] = useState("");
+
+  const getDecks = () => {
+    axios.get("/decks")
+     .then((response) => {
+        setDecks([...response.data]);
+     });
+  }
+
+  const handleDeckLink = (event) => {
+    setCardMaker(true);
+    setDeckName(event.target.getAttribute("value"));
+    setHelpMessage("");
+  }
 
   const handleDeckForm = (event) => {
     event.preventDefault();
@@ -28,6 +43,7 @@ function Deck() {
         setCardMaker(true);
         setDeckName(formData.get("deck_name"));
         setHelpMessage("");
+        getDecks();
       } else {
         setHelpMessage(response.data);
       }
@@ -39,8 +55,25 @@ function Deck() {
     if (event.nativeEvent.submitter.name === "cancel_button") {
       setCardMaker(false);
       setDeckName("");
+      setHelpMessage("");
+    } else if (event.nativeEvent.submitter.name === "delete_button") {
+      var formData = new FormData(event.target);
+      formData.append("deck_name", deckName);
+      axios.delete("/decks/", { data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "X-CSRFToken": formData.get("csrf-token")
+        }
+      }).then(response => {
+        if (response.data === "Success!") {
+          getDecks();
+          setHelpMessage("Deck deleted!");
+          setCardMaker(false);
+        }
+      })
     } else {
       var formData = new FormData(event.target);
+      formData.append("deck_name", deckName);
       axios.post("/flashcards/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -49,11 +82,21 @@ function Deck() {
       }).then(response => {
         if (response.data === "Success!") {
           setHelpMessage("Flashcard added successfully!");
-          setTextareaValue("");
+          setQuestionValue("");
+          setAnswerValue("");
         }
       })
     }
   }
+
+  /*Get user's decks*/
+  useEffect(() => {
+    getDecks();
+  }, []);
+
+  const deckList = decks.map(deck => <li key={deck.id} 
+                                      onClick={handleDeckLink}
+                                      value={deck.deck_name}>{deck.deck_name}</li>);
 
   if (!isLoggedIn)
     return <Redirect />;
@@ -68,6 +111,9 @@ function Deck() {
           <button type="submit">Create deck<br/></button>
         </form>
         <div>{helpMessage}</div>
+        <ul>
+          {deckList}
+        </ul>
       </div>
     );
   } else {
@@ -78,20 +124,21 @@ function Deck() {
           <CSRF />
           <label htmlFor="question">Question: </label><br/>
           <textarea 
-            onChange={e => setTextareaValue(e.target.value)}
+            onChange={e => setQuestionValue(e.target.value)}
             id="question_input" 
             name="question"
-            value={textareaValue}
+            value={questionValue}
           /><br/>
           <label htmlFor="answer">Answer: </label><br/>
           <textarea 
-            onChange={e => setTextareaValue(e.target.value)}
+            onChange={e => setAnswerValue(e.target.value)}
             id="answer_input" 
             name="answer"
-            value={textareaValue}
+            value={answerValue}
           /><br/>
           <button type="submit" name="create_button">Create flashcard<br/></button>
           <button type="submit" name="cancel_button">Cancel</button>
+          <button type="submit" name="delete_button">Delete deck</button>
         </form>
         <div>{helpMessage}</div>
       </div>
