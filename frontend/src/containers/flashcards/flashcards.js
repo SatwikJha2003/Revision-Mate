@@ -1,11 +1,11 @@
-import '../flashcards.css';
+import '../../flashcards.css';
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUser } from "../features/manageAccount";
+import { selectUser } from "../../features/manageAccount";
 import axios from "axios"; 
-import Redirect from "../components/redirect";
-import CSRF from "../components/csrfGetter";
+import Redirect from "../../components/redirect";
+import CSRF from "../../components/csrfGetter";
 
 function Flashcards() {
   const [cards, setCards] = useState([]);

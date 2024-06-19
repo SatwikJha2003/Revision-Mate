@@ -6,11 +6,11 @@ import { PersistGate } from "redux-persist/integration/react"
 import axios from "axios";
 import store from "./store";
 
-import Login from "./containers/login";
-import Register from "./containers/register";
-import Logout from "./containers/logout";
-import Deck from "./containers/deck";
-import Flashcards from "./containers/flashcards";
+import Login from "./containers/login/login";
+import Register from "./containers/register/register";
+import Logout from "./containers/logout/logout";
+import Deck from "./containers/deck/deck";
+import Flashcards from "./containers/flashcards/flashcards";
 import NavBar from "./components/navbar";
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
         <Router>
           <NavBar />
           <Routes>
-            <Route exact path="/" element="App.js" />
+            <Route exact path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/deck" element={<Deck />} />

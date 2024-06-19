@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import CSRF from "../components/csrfGetter";
+import CSRF from "../../components/csrfGetter";
 
 function Register() {
 

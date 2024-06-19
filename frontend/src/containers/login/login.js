@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../features/manageAccount";
+import { login } from "../../features/manageAccount";
 import axios from "axios";
-import CSRF from "../components/csrfGetter"
+import CSRF from "../../components/csrfGetter";
+
+import "./login.module.css";
 
 function Login() {
 
@@ -31,7 +33,7 @@ function Login() {
   }
 
   return (
-    <div>
+    <body>
       <form id="login_form" onSubmit={handleForm}>
         <CSRF />
         <input type="text" name="username"/><br/>
@@ -39,7 +41,7 @@ function Login() {
         <button type="submit">Submit<br/></button>
       </form>
       <div>{errorMessage}</div>
-    </div>
+    </body>
   );
 }
 
