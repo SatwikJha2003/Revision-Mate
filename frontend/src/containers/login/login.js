@@ -4,7 +4,7 @@ import { login } from "../../features/manageAccount";
 import axios from "axios";
 import CSRF from "../../components/csrfGetter";
 
-import "./login.module.css";
+import styles from "./login.module.css";
 
 function Login() {
 
@@ -33,7 +33,7 @@ function Login() {
   }
 
   return (
-    <body>
+    <main>
       <h1>REVISION MATE</h1>
       <form id="login_form" onSubmit={handleForm}>
         <CSRF />
@@ -41,10 +41,10 @@ function Login() {
         <input type="text" name="username"/>
         <label htmlFor="password">PASSWORD: </label>
         <input type="password" name="password"/><br/>
-        <button type="submit"><span>LOGIN</span></button>
+        <button type="submit"><span>LOGIN</span></button><br/>
+        <p className={styles.error}>{errorMessage}</p>
       </form>
-      <div>{errorMessage}</div>
-    </body>
+    </main>
   );
 }
 

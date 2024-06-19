@@ -6,11 +6,8 @@ html {
 body {
 	font-family:  "verdana";
 	background-color: #b3ffb3;
+	width:  50%;
 	margin: auto;
-}
-
-main {
-	width: 100%;
 }
 
 h1 {
@@ -48,7 +45,7 @@ button {
 	outline: 0;
     padding: 20px; 
     height: 15px;
-    width:  50%;
+    width:  75%;
     display: table-cell;
 }
 
