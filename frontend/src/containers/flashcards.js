@@ -13,6 +13,7 @@ function Flashcards() {
   const [deckName, setDeckName] = useState("");
   const [isShowDeck, setShowDeck] = useState(false);
   const [isQuestionSide, setQuestionSide] = useState(true);
+  const [isAnswerShown, setAnswerShown] = useState(false);
   const [isShuffled, setShuffled] = useState(false);
   const [index, setIndex] = useState(0);
   const isLoggedIn = useSelector(selectUser);
@@ -26,8 +27,24 @@ function Flashcards() {
   }
 
   const handleDeckLink = (event) => {
-    const deck_name = event.target.getAttribute("value");
-    setDeckName(event.target.getAttribute("value"));
+    if (event.target.getAttribute("class") === "deck") {
+      setDeckName(event.target.getAttribute("value"));
+      axios.get("/flashcards", {
+        params: {deck_name:event.target.getAttribute("value")}
+      }).then(response => {
+        setCards([...response.data]);
+        setAnswerShown(false);
+        setQuestionSide(true);
+        var cards = response.data;
+        for (var i = 0; i < cards.length; i++) {
+          var random_i = Math.floor(Math.random() * (i+1));
+          var temp = cards[i];
+          cards[i] = cards[random_i];
+          cards[random_i] = temp;
+        }
+        setShowDeck(true);
+      });
+    }
   }
 
   const handleDeckForm = (event) => {
@@ -47,21 +64,27 @@ function Flashcards() {
       cards[i] = cards[random_i];
       cards[random_i] = temp;
     }
+    setQuestionSide(true);
     setShuffled(!isShuffled);
   }
 
   // Function to change state of question_side to flip flashcard
   const flip = () => {
+    setAnswerShown(true);
     setQuestionSide(!isQuestionSide);
   }
 
   // Got to next question
   const goNext = () => {
+    setAnswerShown(false);
+    setQuestionSide(true);
     setIndex((index + 1) % cards.length);
   }
 
   // Go to previous question
   const goPrevious = () => {
+    setAnswerShown(false);
+    setQuestionSide(true);
     setIndex((index - 1 + cards.length) % cards.length);
   }
 
@@ -83,20 +106,19 @@ function Flashcards() {
     return (
       <div>
         <ul>{deckList}</ul>
-        <form id="deck_form" onSubmit={handleDeckForm}>
-          <CSRF />
-          <button type="submit">Use deck<br/></button>
-        </form>
       </div>
     )
 
   return (
     <div>
+      <div>
+        <ul>{deckList}</ul>
+      </div>
       <div onClick={shuffle}>shuffle</div>
       <div onClick={flip} className={"flashcard" +  (isQuestionSide ? "-question":"-answer")}>
         <div className="flashcard" key="{cards.length && cards[index].id}">
           <div className="question-side">{cards.length && cards[index].question}</div>
-          <div className="answer-side">{cards.length && cards[index].answer}</div>
+          <div className="answer-side">{isAnswerShown && cards.length && cards[index].answer}</div>
         </div>
       </div>
       <div onClick={goNext}>next</div>
