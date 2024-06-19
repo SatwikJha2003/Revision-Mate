@@ -34,11 +34,14 @@ function Login() {
 
   return (
     <body>
+      <h1>REVISION MATE</h1>
       <form id="login_form" onSubmit={handleForm}>
         <CSRF />
-        <input type="text" name="username"/><br/>
+        <label htmlFor="username">USERNAME: </label>
+        <input type="text" name="username"/>
+        <label htmlFor="password">PASSWORD: </label>
         <input type="password" name="password"/><br/>
-        <button type="submit">Submit<br/></button>
+        <button type="submit"><span>LOGIN</span></button>
       </form>
       <div>{errorMessage}</div>
     </body>
