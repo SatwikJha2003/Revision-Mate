@@ -9,6 +9,7 @@ function Register() {
 
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+
   const handleForm = (event) => {
     event.preventDefault();
     var formData = new FormData(event.target);
@@ -25,25 +26,31 @@ function Register() {
     })
   }
 
+  useEffect(() => {
+    document.body.className = styles.register_body;
+  })
+
   return (
-    <main>
-      <form id="register_form" onSubmit={handleForm}>
+    <main className={styles.register_main}>
+      <form id="register_form" className={styles.register_form} onSubmit={handleForm}>
         <CSRF />
-        <label htmlFor="first_name">First name: </label>
-        <input type="text" name="first_name" required/>
-        <label htmlFor="last_name">Last name: </label>
-        <input type="text" name="last_name" required/>
-        <label htmlFor="username">Username: </label>
-        <input type="text" name="username" required/>
-        <label htmlFor="email">Email: </label>
-        <input type="email" name="email" required/>
-        <label htmlFor="password_one">Password: </label>
-        <input type="password" name="password_one" required/>
-        <label htmlFor="password_two">Confirm Password: </label>
-        <input type="password" name="password_two" required/><br/>
-        <button type="submit"><span>REGISTER</span></button>
+        <label className={styles.register_label} htmlFor="first_name">First name: </label>
+        <input type="text" name="first_name" required className={styles.register_input}/>
+        <label className={styles.register_label} htmlFor="last_name">Last name: </label>
+        <input type="text" name="last_name" required className={styles.register_input}/>
+        <label className={styles.register_label} htmlFor="username">Username: </label>
+        <input type="text" name="username" required className={styles.register_input}/>
+        <label className={styles.register_label} htmlFor="email">Email: </label>
+        <input type="email" name="email" required className={styles.register_input}/>
+        <label className={styles.register_label} htmlFor="password_one">Password: </label>
+        <input type="password" name="password_one" required className={styles.register_input}/>
+        <label className={styles.register_label} htmlFor="password_two">Confirm Password: </label>
+        <input type="password" name="password_two" required className={styles.register_input}/><br/>
+        <button type="submit" className={styles.register_submit}>
+          <span className={styles.register_span}>REGISTER</span>
+        </button>
       </form>
-      <p className={styles.error}>{errorMessage}</p>
+      <p className={styles.register_error}>{errorMessage}</p>
     </main>
   );
 }

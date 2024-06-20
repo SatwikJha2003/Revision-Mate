@@ -1,11 +1,11 @@
-import '../../flashcards.css';
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/manageAccount";
 import axios from "axios"; 
 import Redirect from "../../components/redirect";
 import CSRF from "../../components/csrfGetter";
+
+import styles from "./flashcards.module.css";
 
 function Flashcards() {
   const [cards, setCards] = useState([]);
@@ -17,7 +17,6 @@ function Flashcards() {
   const [isShuffled, setShuffled] = useState(false);
   const [index, setIndex] = useState(0);
   const isLoggedIn = useSelector(selectUser);
-  const [searchparams] = useSearchParams();
 
   const getDecks = () => {
     axios.get("/decks")
@@ -27,7 +26,7 @@ function Flashcards() {
   }
 
   const handleDeckLink = (event) => {
-    if (event.target.getAttribute("class") === "deck") {
+    if (!event.target.getAttribute("class").includes("selected")) {
       setDeckName(event.target.getAttribute("value"));
       axios.get("/flashcards", {
         params: {deck_name:event.target.getAttribute("value")}
@@ -90,13 +89,16 @@ function Flashcards() {
 
   /*Get user's decks*/
   useEffect(() => {
+    document.body.className = styles.flashcards_body;
+    const root = document.getElementById('root');
+    root.style.cssText = "height: 100%;";
     getDecks();
   }, []);
 
   const deckList = decks.map(deck => <li key={deck.id} 
                                       onClick={handleDeckLink}
                                       value={deck.deck_name}
-                                      className={"deck" + (deckName === deck.deck_name ? "-selected":"")}
+                                      className={(deckName === deck.deck_name ? styles.deck_selected:styles.deck)}
                                      >{deck.deck_name}</li>);
 
   if (!isLoggedIn)
@@ -104,26 +106,32 @@ function Flashcards() {
 
   if (!isShowDeck)
     return (
-      <div>
-        <ul>{deckList}</ul>
-      </div>
+      <main className={styles.flashcards_main}>
+        <div className={styles.flashcards_list}>
+          <ul>{deckList}</ul>
+        </div>
+      </main>
     )
 
   return (
-    <div>
-      <div>
+    <main className={styles.flashcards_main}>
+      <div className={styles.flashcards_list}>
         <ul>{deckList}</ul>
       </div>
-      <div onClick={shuffle}>shuffle</div>
-      <div onClick={flip} className={"flashcard" +  (isQuestionSide ? "-question":"-answer")}>
-        <div className="flashcard" key="{cards.length && cards[index].id}">
-          <div className="question-side">{cards.length && cards[index].question}</div>
-          <div className="answer-side">{isAnswerShown && cards.length && cards[index].answer}</div>
+      <div className={styles.flashcard_container}>
+        <div onClick={flip} className={(isQuestionSide ? styles.flashcard_question:styles.flashcard_answer)}>
+          <div className={styles.flashcard} key="{cards.length && cards[index].id}">
+            <div className={styles.question_side}>{cards.length && cards[index].question}</div>
+            <div className={styles.answer_side}>{isAnswerShown && cards.length && cards[index].answer}</div>
+          </div>
+        </div>
+        <div className={styles.button_container}>
+          <div onClick={goNext} className={styles.next}>NEXT</div>
+          <div onClick={shuffle} className={styles.shuffle}>SHUFFLE</div>
+          <div onClick={goPrevious} className={styles.previous}>PREVIOUS</div>
         </div>
       </div>
-      <div onClick={goNext}>next</div>
-      <div onClick={goPrevious}>previous</div>
-    </div>
+    </main>
   );
 
 }

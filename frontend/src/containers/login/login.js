@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../features/manageAccount";
 import axios from "axios";
@@ -10,6 +11,7 @@ function Login() {
 
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleForm = (event) => {
     event.preventDefault();
@@ -26,23 +28,30 @@ function Login() {
           loggedIn: true
           })
         )
+        navigate("/flashcards");
       }
       else
         setErrorMessage(response.data);
     });
   }
 
+  useEffect(() => {
+    document.body.className = styles.login_body;
+  })
+
   return (
-    <main>
-      <h1>REVISION MATE</h1>
-      <form id="login_form" onSubmit={handleForm}>
+    <main className={styles.login_main}>
+      <h1 className={styles.login_header}>REVISION MATE</h1>
+      <form id="login_form" className={styles.login_form} onSubmit={handleForm}>
         <CSRF />
-        <label htmlFor="username">USERNAME: </label>
-        <input type="text" name="username"/>
-        <label htmlFor="password">PASSWORD: </label>
-        <input type="password" name="password"/><br/>
-        <button type="submit"><span>LOGIN</span></button><br/>
-        <p className={styles.error}>{errorMessage}</p>
+        <label className={styles.login_label} htmlFor="username">USERNAME: </label>
+        <input type="text" name="username" className={styles.login_input}/>
+        <label className={styles.login_label} htmlFor="password">PASSWORD: </label>
+        <input type="password" name="password" className={styles.login_input}/><br/>
+        <button type="submit" className={styles.login_submit}>
+          <span className={styles.login_span}>LOGIN</span>
+        </button><br/>
+        <p className={styles.login_error}>{errorMessage}</p>
       </form>
     </main>
   );

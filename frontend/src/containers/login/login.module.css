@@ -3,27 +3,28 @@ html {
 	display: grid;
 }
 
-body {
+.login_body {
 	font-family:  "verdana";
 	background-color: #b3ffb3;
 	margin: auto;
+	width: 40%;
 }
 
-main {
+.login_main {
 	width: 100%;
 }
 
-h1 {
+.login_header {
 	font-size: 500%;
 }
 
-form {
+.login_form {
 	display: grid;
 	grid-template-columns: max-content max-content;
     grid-gap:5px;
 }
 
-label {
+.login_label {
 	font-size: 200%;
 	font-weight: bold;
     display: table-cell;
@@ -31,7 +32,7 @@ label {
     margin-top: 4%;
 }
 
-input {
+.login_input {
 	border-radius: 25px;
 	font-size: 110%;
 	border: 0;
@@ -42,7 +43,7 @@ input {
     display: table-cell;
 }
 
-button {
+.login_submit {
 	border-radius: 25px;
 	border: 0;
 	outline: 0;
@@ -52,14 +53,14 @@ button {
     display: table-cell;
 }
 
-span {
+.login_span {
 	font-weight: bold;
 	font-size: 200%;
 	position: relative;
 	bottom: 12px;
 }
 
-.error {
+.login_error {
 	font-size: 150%;
 	font-weight: bold;
 }
