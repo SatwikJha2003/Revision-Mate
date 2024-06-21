@@ -11,7 +11,7 @@ router.register('logout', views.LogoutView, basename="logout")
 router.register('register', views.RegisterView, basename="register")
 router.register('decks', views.DecksView, basename="decks")
 router.register('flashcards', views.FlashcardsView, basename="flashcards")
-router.register('upload', views.FileUploadView, basename="upload")
+router.register('ocr', views.OCRView, basename="ocr")
 router.register('delete', views.DeleteUserView, basename="delete")
 
 urlpatterns = [

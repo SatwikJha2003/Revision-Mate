@@ -9,6 +9,7 @@ function NavBar() {
 			<NavLink to="/register">Register</NavLink>
 			<NavLink to="/deck">Deck</NavLink>
 			<NavLink to="/flashcards">Flashcards</NavLink>
+			<NavLink to="/ocr">OCR</NavLink>
 			<NavLink to="/logout">Logout</NavLink>
 		</nav>
 	)

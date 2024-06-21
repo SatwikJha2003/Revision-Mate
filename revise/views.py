@@ -140,15 +140,14 @@ class DecksView(viewsets.ModelViewSet):
         deck_id = Deck.objects.filter(deck_name=deck_name, owner_id=request.user.id).delete()
         return Response("Success!")
 
-class FileUploadView(viewsets.ViewSet):
+class OCRView(viewsets.ViewSet):
     serializer_class = FileUploadSerializer
 
     def list(self, request):
         return Response("Get API")
 
     def create(self, request):
-        print(request.FILES)
-        uploaded_file = request.FILES.get("uploaded_file")
+        uploaded_file = request.FILES.get("file_name")
         with open("extract.jpg", "wb") as new_file:
             for chunk in uploaded_file.chunks():
                 new_file.write(chunk)
