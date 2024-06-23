@@ -19,7 +19,7 @@ function NavBar() {
 			<nav>
 				<NavLink to="/deck">Deck</NavLink>
 				<NavLink to="/flashcards">Flashcards</NavLink>
-				<NavLink to="/ocr">OCR</NavLink>
+				<NavLink to="/summary">Summary</NavLink>
 				<NavLink to="/logout">Logout</NavLink>
 			</nav>
 		)

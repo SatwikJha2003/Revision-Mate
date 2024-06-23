@@ -3,6 +3,8 @@ import pytesseract
 from PIL import Image
 import os
 from pathlib import Path
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
 
 # Password strength checker
 def check_password_strength(password):
@@ -27,6 +29,15 @@ def check_password_strength(password):
 	else:
 		return (False,"Password should have at least 1 alphabet, 1 digit and 1 special character!")
 
+# Check if file is image file
+def check_if_image(file):
+	try:
+		with Image.open(file) as image:
+			image.verify()
+			return True
+	except:
+		return False
+
 # OCR function
 def get_text_from_image():
 	pytesseract.pytesseract.tesseract_cmd = r'C:\Users\chngw\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
@@ -48,7 +59,48 @@ def get_text_from_image():
 		extracted_text = pytesseract.image_to_string(Image.open(temp))
 		os.remove(temp)
 		os.remove(image_path)
-		print("ocr")
 		return extracted_text
 	except:
 		print("error")
+
+# Summarize text content
+# Algorithm based on word frequency
+def summarize(text):
+	# Obtain stop words such as is, the
+	stop_words = set(stopwords.words("english"))
+	impt_words = []
+	response = ""
+
+	for word in word_tokenize(text):
+		if word.lower() not in stop_words:
+			impt_words.append(word)
+
+	# For each word, allocate a score for frequency
+	word_frequencies = dict()
+	for word in impt_words:
+		if word in word_frequencies:
+			word_frequencies[word] = word_frequencies[word] + 1
+		else:
+			word_frequencies[word] = 1
+
+	sentences = sent_tokenize(text)
+	sentence_values = dict()
+
+	total_value = 0
+
+	# Calculate score of each sentence
+	for sentence in sentences:
+		sentence_value = 0
+		for word in sentence:
+			if word in word_frequencies:
+				sentence_value += word_frequencies[word]
+		sentence_values[sentence] = sentence_value
+		total_value += sentence_value
+
+	# Calculate threshold by dividing the total score by the number of sentences
+	threshold = int(total_value/len(sentence_values))
+	for sentence in sentence_values:
+		# Return sentences that meet the threshold
+		if sentence_values[sentence] >= threshold:
+			response += sentence
+	return response

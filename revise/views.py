@@ -140,19 +140,26 @@ class DecksView(viewsets.ModelViewSet):
         deck_id = Deck.objects.filter(deck_name=deck_name, owner_id=request.user.id).delete()
         return Response("Success!")
 
-class OCRView(viewsets.ViewSet):
+class SummaryView(viewsets.ViewSet):
     serializer_class = FileUploadSerializer
-
-    def list(self, request):
-        return Response("Get API")
 
     def create(self, request):
         uploaded_file = request.FILES.get("file_name")
-        with open("extract.jpg", "wb") as new_file:
+        is_image = utils.check_if_image(uploaded_file)
+        file_text = ""
+
+        if is_image:
+            with open("extract.jpg", "wb") as new_file:
+                for chunk in uploaded_file.chunks():
+                    new_file.write(chunk)
+            file_text = utils.get_text_from_image()
+        else:
+            data = b""
             for chunk in uploaded_file.chunks():
-                new_file.write(chunk)
-        extracted_text = utils.get_text_from_image()
-        return Response(extracted_text)
+                data += chunk
+            file_text = data.decode()
+        summary = utils.summarize(file_text)
+        return Response((file_text,summary))
 
 class DeleteUserView(viewsets.ViewSet):
 

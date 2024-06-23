@@ -11,7 +11,7 @@ import Register from "./containers/register/register";
 import Logout from "./containers/logout/logout";
 import Deck from "./containers/deck/deck";
 import Flashcards from "./containers/flashcards/flashcards";
-import OCR from "./containers/ocr/ocr";
+import Summary from "./containers/summary/summary";
 import NavBar from "./components/navbar";
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/deck" element={<Deck />} />
             <Route path="/flashcards" element={<Flashcards />} />
-            <Route path="/ocr" element={<OCR />} />
+            <Route path="/summary" element={<Summary />} />
             <Route path="/logout" element={<Logout />}/>
           </Routes>
         </Router>
