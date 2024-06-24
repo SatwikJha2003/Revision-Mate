@@ -140,6 +140,36 @@ class DecksView(viewsets.ModelViewSet):
         deck_id = Deck.objects.filter(deck_name=deck_name, owner_id=request.user.id).delete()
         return Response("Success!")
 
+class ShareView(viewsets.ModelViewSet):
+    serializer_class = DeckSerializer
+    queryset = Deck.objects.all()
+
+    def list(self, request):
+        decks = Deck.objects.all().filter(share="public").exclude(owner=request.user.id)
+        decks = DeckSerializer(decks, many=True)
+        return Response(decks.data)
+
+    def create(self, request):
+        deck_id = request.data["deck_id"]
+        deck = Deck.objects.get(id=deck_id)
+        flashcards = deck.flashcard_set.all()
+        flashcards = FlashcardSerializer(flashcards, many=True)
+
+        # Make request modifiable to reuse code
+        request.POST._mutable = True
+
+        # Make the deck
+        response = DecksView.create(self, request)
+
+        # Update request with each question and answer
+        # and create the flashcard
+        if response == "Success!":
+            for flashcard in flashcards.data:
+                request.POST["question"] = flashcard["question"]
+                request.POST["answer"] = flashcard["answer"]
+                FlashcardsView.create(self, request)
+        return Response("Success!")
+
 class SummaryView(viewsets.ViewSet):
     serializer_class = FileUploadSerializer
 

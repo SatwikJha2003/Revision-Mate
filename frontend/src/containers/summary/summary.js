@@ -10,7 +10,6 @@ import styles from "./summary.module.css";
 
 function Summary() {
   const isLoggedIn = useSelector(selectUser);
-  const navigate = useNavigate();
   const [fileName, setFileName] = useState("CHOOSE FILE");
   const [fileText, setFileText] = useState("");
   const [summaryText, setSummaryText] = useState("");

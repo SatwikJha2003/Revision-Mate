@@ -32,6 +32,7 @@ function Register() {
 
   return (
     <main className={styles.register_main}>
+      <h1 className={styles.register_header}>REGISTER</h1>
       <form id="register_form" className={styles.register_form} onSubmit={handleForm}>
         <CSRF />
         <label className={styles.register_label} htmlFor="first_name">First name: </label>

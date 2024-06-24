@@ -13,6 +13,7 @@ class Users(models.Model):
 class Deck(models.Model):
 	deck_name = models.CharField(max_length=100, default="")
 	owner = models.ForeignKey(User, on_delete=models.CASCADE)
+	share = models.CharField(max_length=20, default="private")
 
 	# Deck names should be unique for a single user
 	# However, deck names can appear multiple times if users are different

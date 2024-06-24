@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function CSRFGetter() {
+function CSRFGetter(props, ref) {
 	const [csrf, setCsrf] = useState("");
 
 	const getCSRF = () => {
@@ -25,12 +25,13 @@ function CSRFGetter() {
 				await axios.get("/csrf");
 			} catch (err) {}
 		}
+		getData();
 		setCsrf(getCSRF());
 	}, []);
 
 	return (
-		<input type="hidden" name="csrf-token" value={csrf} />
+		<input type="hidden" name="csrf-token" value={csrf} ref={ref}/>
 	);
 }
 
-export default CSRFGetter;
+export default React.forwardRef(CSRFGetter);

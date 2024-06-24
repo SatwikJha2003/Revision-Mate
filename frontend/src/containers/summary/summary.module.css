@@ -5,20 +5,22 @@ html {
 }
 
 .summary_body {
-	font-family:  "verdana";
+	font-family:  "Nunito Sans";
 	background-color: #b3ffb3;
 	margin: auto;
 	width: 100%;
+	min-height: 100%;
 }
 
 .summary_main {
+	margin-top: 3%;
 	display: flex;
 	text-align: center;
 	flex-direction: column;
 }
 
 .summary_form {
-	font-size: 200%;
+	font-size: 300%;
 	font-weight: bold;
 }
 
@@ -41,7 +43,7 @@ input[type="file"] {
 	border: none;
 	border-radius: 25px;
 	height: 50px;
-	width: 150px;
+	width: 200px;
 	align-items: center;
     justify-content: center;
     margin-bottom: 2%;
@@ -49,7 +51,7 @@ input[type="file"] {
 
 .summary_span {
 	font-weight: bold;
-	font-size: 200%;
+	font-size: 300%;
 	position: relative;
 }
 
@@ -59,7 +61,7 @@ input[type="file"] {
 }
 
 .file_text, .summary_text {
-	font-size: 100%;
+	font-size: 120%;
 	font-weight: bold;
 	background-color: #c5f6fc;
 	width: 40%;
@@ -67,6 +69,7 @@ input[type="file"] {
 	text-align: justify;
 	padding: 15px;
 	flex: 1;
+	margin-bottom: 2%;
 }
 
 .file_text {

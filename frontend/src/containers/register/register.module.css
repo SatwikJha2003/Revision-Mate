@@ -4,10 +4,21 @@ html {
 }
 
 .register_body {
-	font-family:  "verdana";
+	font-family:  "Nunito Sans";
 	background-color: #b3ffb3;
-	width:  50%;
+	min-height: 100%;
+	min-width: 100%;
+}
+
+.register_main {
+	width: 50%;
 	margin: auto;
+	margin-top: 8%;
+}
+
+.register_header {
+	font-size: 500%;
+	margin-left: 30%;
 }
 
 .register_form {

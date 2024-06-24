@@ -3,6 +3,7 @@ import pytesseract
 from PIL import Image
 import os
 from pathlib import Path
+import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
 
@@ -76,12 +77,7 @@ def summarize(text):
 			impt_words.append(word)
 
 	# For each word, allocate a score for frequency
-	word_frequencies = dict()
-	for word in impt_words:
-		if word in word_frequencies:
-			word_frequencies[word] = word_frequencies[word] + 1
-		else:
-			word_frequencies[word] = 1
+	word_frequencies = nltk.FreqDist(impt_words)
 
 	sentences = sent_tokenize(text)
 	sentence_values = dict()
