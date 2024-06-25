@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../features/manageAccount";
+import { selectUser } from "../../features/session";
 import axios from "axios";
 import CSRF from "../../components/csrfGetter";
 import Redirect from "../../components/redirect";
+
+import styles from "./deck.module.css";
 
 function Deck() {
   const isLoggedIn = useSelector(selectUser);
@@ -90,56 +92,74 @@ function Deck() {
 
   /*Get user's decks*/
   useEffect(() => {
+    document.body.className = styles.deck_body;
     getDecks();
   }, []);
 
   const deckList = decks.map(deck => <li key={deck.id} 
                                       onClick={handleDeckLink}
-                                      value={deck.deck_name}>{deck.deck_name}</li>);
+                                      value={deck.deck_name}
+                                      className={styles.deck_li}>{deck.deck_name}</li>);
 
   if (!isLoggedIn)
     return <Redirect />;
 
   if (!isCardMaker) {
     return (
-      <div>
-        <form id="deck_form" onSubmit={handleDeckForm}>
+      <div className={styles.deck_container}>
+        <form id="deck_form" className={styles.deck_form} onSubmit={handleDeckForm}>
           <CSRF />
-          <label htmlFor="deck_name">Deck name: </label>
-          <input type="text" name="deck_name"/><br/>
-          <button type="submit">Create deck<br/></button>
+          <label className={styles.deck_label} htmlFor="deck_name">Deck name:&nbsp;</label>
+          <input type="text" name="deck_name" className={styles.deck_input}/><br/>
+          <button type="submit" className={styles.deck_submit}>
+            <span className={styles.deck_span}>Create deck</span>
+          </button><br/>
         </form>
         <div>{helpMessage}</div>
-        <ul>
+        <ul className={styles.deck_ul}>
           {deckList}
         </ul>
       </div>
     );
   } else {
     return (
-      <div>
-        <h2>Deck: {deckName}</h2>
-        <form id="flashcard_form" onSubmit={handleCardForm}>
+      <div className={styles.deck_container}>
+        <form id="flashcard_form" className={styles.deck_form_two} onSubmit={handleCardForm}>
           <CSRF />
-          <label htmlFor="question">Question: </label><br/>
+          <label className={styles.deck_label} htmlFor="deck_name">Deck: {deckName}</label><br/>
+          <label className={styles.deck_label} htmlFor="question">Question: </label><br/>
           <textarea 
+            rows="2"
+            cols="100"
             onChange={e => setQuestionValue(e.target.value)}
             id="question_input" 
             name="question"
+            className={styles.deck_textarea}
             value={questionValue}
           /><br/>
-          <label htmlFor="answer">Answer: </label><br/>
-          <textarea 
+          <label className={styles.deck_label} htmlFor="answer">Answer: </label><br/>
+          <textarea
+            rows="2"
+            cols="100"
             onChange={e => setAnswerValue(e.target.value)}
             id="answer_input" 
             name="answer"
+            className={styles.deck_textarea}
             value={answerValue}
           /><br/>
-          <button type="submit" name="create_button">Create flashcard<br/></button>
-          <button type="submit" name="cancel_button">Cancel</button>
-          <button type="submit" name="delete_button">Delete deck</button>
+          <div className={styles.deck_buttons}>
+            <button type="submit" className={styles.deck_submits} name="create_button">
+              <span className={styles.deck_span}>Create flashcard</span>
+            </button>
+            <button type="submit" className={styles.deck_submits} name="delete_button">
+              <span className={styles.deck_span}>Delete deck</span>
+            </button>
+            <button type="submit" className={styles.deck_submits} name="cancel_button">
+              <span className={styles.deck_span}>Cancel</span>
+            </button>
+          </div>
+          <div className={styles.deck_help}>{helpMessage}</div>
         </form>
-        <div>{helpMessage}</div>
       </div>
     )
   }

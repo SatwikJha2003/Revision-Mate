@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../features/manageAccount";
+import { selectUser } from "../../features/session";
 import axios from "axios";
 import CSRF from "../../components/csrfGetter";
 import Redirect from "../../components/redirect";

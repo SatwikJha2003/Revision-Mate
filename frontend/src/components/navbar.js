@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUser } from "../features/manageAccount";
+import { selectUser } from "../features/session";
 
 import styles from "./navbar.module.css";
 

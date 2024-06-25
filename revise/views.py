@@ -150,6 +150,7 @@ class ShareView(viewsets.ModelViewSet):
         return Response(decks.data)
 
     def create(self, request):
+        # Get the deck to be copied
         deck_id = request.data["deck_id"]
         deck = Deck.objects.get(id=deck_id)
         flashcards = deck.flashcard_set.all()
@@ -163,7 +164,7 @@ class ShareView(viewsets.ModelViewSet):
 
         # Update request with each question and answer
         # and create the flashcard
-        if response == "Success!":
+        if response.data == "Success!":
             for flashcard in flashcards.data:
                 request.POST["question"] = flashcard["question"]
                 request.POST["answer"] = flashcard["answer"]

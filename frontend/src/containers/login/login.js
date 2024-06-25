@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../features/manageAccount";
+import { login } from "../../features/session";
 import axios from "axios";
 import CSRF from "../../components/csrfGetter";
 

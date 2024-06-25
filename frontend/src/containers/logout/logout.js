@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { logout } from "../../features/manageAccount";
+import { logout } from "../../features/session";
 import axios from "axios";
 import CSRF from "../../components/csrfGetter";
 import Redirect from "../../components/redirect";

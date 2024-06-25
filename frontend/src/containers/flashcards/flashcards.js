@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../features/manageAccount";
+import { selectUser } from "../../features/session";
 import axios from "axios"; 
 import Redirect from "../../components/redirect";
 import CSRF from "../../components/csrfGetter";
