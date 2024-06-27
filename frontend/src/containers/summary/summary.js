@@ -13,6 +13,7 @@ function Summary() {
   const [fileName, setFileName] = useState("CHOOSE FILE");
   const [fileText, setFileText] = useState("");
   const [summaryText, setSummaryText] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (event) => {
     if(event.target.files[0])
@@ -24,15 +25,21 @@ function Summary() {
   const handleForm = (event) => {
     event.preventDefault();
     var formData = new FormData(event.target);
-    axios.post("/summary/", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "X-CSRFToken": formData.get("csrf-token")
-      }
-    }).then(response => {
-      setFileText(response.data[0]);
-      setSummaryText(response.data[1]);
-    });
+    console.log(formData.get("file_name"));
+    // Ensure that there is a file
+    if (formData.get("file_name")["name"] !== "") {
+      setErrorMessage("");
+      axios.post("/summary/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "X-CSRFToken": formData.get("csrf-token")
+        }
+      }).then(response => {
+        setFileText(response.data[0]);
+        setSummaryText(response.data[1]);
+      });
+    } else
+      setErrorMessage("Please input a file!");
   }
 
   useEffect(() => {
@@ -56,6 +63,7 @@ function Summary() {
         <button type="submit" className={styles.summary_submit}>
           <span className={styles.summary_span}>UPLOAD</span>
         </button>
+        <p className={styles.summary_error}>{errorMessage}</p>
       </form>
       <div className={styles.text_container}>
         <div className={(fileText ? styles.file_text:styles.none)}>{fileText}</div>

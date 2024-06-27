@@ -124,21 +124,30 @@ class DecksView(viewsets.ModelViewSet):
 
     def create(self, request):
         try:
-            deck_name = request.data['deck_name']
+            deck_name = request.data["deck_name"]
             if deck_name == "":
                 return Response("Deck name cannot be empty!")
 
-            deck = Deck(deck_name=deck_name, owner=request.user)
+            if "share" in request.data.keys() and request.data["share"] == "protected":
+                deck = Deck(deck_name=deck_name, owner=request.user, share="protected")
+            else:
+                deck = Deck(deck_name=deck_name, owner=request.user)
             deck.save()
             return Response("Success!")
         except IntegrityError:
             return Response("You already have a deck of this name!")
 
     def delete(self, request):
-        print(request.data["deck_name"])
         deck_name = request.data["deck_name"]
         deck_id = Deck.objects.filter(deck_name=deck_name, owner_id=request.user.id).delete()
         return Response("Success!")
+
+    def patch(self, request):
+        deck_name = request.data["deck_name"]
+        share = request.data["share"]
+        deck = Deck.objects.filter(deck_name=deck_name, owner_id=request.user.id).update(share=share)
+        return Response("Success!")
+        
 
 class ShareView(viewsets.ModelViewSet):
     serializer_class = DeckSerializer
@@ -158,6 +167,7 @@ class ShareView(viewsets.ModelViewSet):
 
         # Make request modifiable to reuse code
         request.POST._mutable = True
+        request.POST["share"] = "protected"
 
         # Make the deck
         response = DecksView.create(self, request)

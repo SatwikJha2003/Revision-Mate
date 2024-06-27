@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 class DeckSerializer(serializers.ModelSerializer):
     class Meta:
         model = Deck
-        fields = ("id", "deck_name", "owner")
+        fields = ("id", "deck_name", "owner", "share")
 
 class FlashcardSerializer(serializers.ModelSerializer):
     class Meta:
