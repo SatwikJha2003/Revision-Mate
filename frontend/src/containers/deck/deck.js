@@ -188,7 +188,8 @@ function Deck() {
               <span className={styles.deck_span}>Delete deck</span>
             </button>
             <button type="submit" className={styles.deck_submits} name="share_button">
-              <span className={styles.deck_span}>Set deck {share === "private" ? "public":"private"}</span>
+              <span className={styles.deck_span}>Set deck {share === "protected" ? "protected" : 
+                                                          share === "private" ? "public":"private"}</span>
             </button>
             <button type="submit" className={styles.deck_submits} name="cancel_button">
               <span className={styles.deck_span}>Cancel</span>
