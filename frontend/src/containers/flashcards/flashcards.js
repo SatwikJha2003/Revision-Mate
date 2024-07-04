@@ -16,6 +16,7 @@ function Flashcards() {
   const [isAnswerShown, setAnswerShown] = useState(false);
   const [isShuffled, setShuffled] = useState(false);
   const [index, setIndex] = useState(0);
+  const [search, setSearch] = useState("");
   const isLoggedIn = useSelector(selectUser);
 
   const getDecks = () => {
@@ -95,7 +96,8 @@ function Flashcards() {
     getDecks();
   }, []);
 
-  const deckList = decks.map(deck => <li key={deck.id} 
+  const deckList = decks.filter(element=>element.deck_name.toLowerCase().includes(search))
+                        .map(deck => <li key={deck.id} 
                                       onClick={handleDeckLink}
                                       value={deck.deck_name}
                                       className={(deckName === deck.deck_name ? styles.deck_selected:styles.deck)}
@@ -107,6 +109,8 @@ function Flashcards() {
   if (!isShowDeck)
     return (
       <main className={styles.flashcards_main}>
+        Search: <input type="text" name="flashcard_search" className={styles.flashcard_search} 
+        onChange={e => setSearch(e.target.value.toLowerCase())}/>
         <div className={styles.flashcards_list}>
           <ul className={styles.flashcards_ul}>{deckList}</ul>
         </div>

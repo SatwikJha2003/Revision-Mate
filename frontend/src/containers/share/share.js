@@ -13,6 +13,7 @@ function Share() {
   const [decks, setDecks] = useState([]);
   const [counter, setCounter] = useState(0);
   const [deckId, setDeckId] = useState("");
+  const [search, setSearch] = useState("");
   const csrfRef = useRef(null);
 
   const getDecks = () => {
@@ -63,18 +64,21 @@ function Share() {
     getDecks();
   }, [])
 
-  const deckList = decks.slice(counter,counter+9).map(
-    deck => <div key={deck.id}
-            onClick={handleDeckLink} 
-            value={deck.id}
-            className={styles.share_deck}>{deck.deck_name}
-            </div>);
+  const deckList = decks.filter(element=>element.deck_name.toLowerCase().includes(search))
+                        .slice(counter,counter+9)
+                        .map(deck => <div key={deck.id}
+                                      onClick={handleDeckLink} 
+                                      value={deck.id}
+                                      className={styles.share_deck}>{deck.deck_name}
+                                      </div>);
 
   if (!isLoggedIn)
     return <Redirect />;
 
   return (
     <main className={styles.share_main}>
+      Search: <input type="text" name="share_search" className={styles.share_search} 
+      onChange={e => setSearch(e.target.value.toLowerCase())}/>
       {deckId && (
         <form id="download_form" className={styles.download_form} onSubmit={handleForm}>
           <CSRF />
