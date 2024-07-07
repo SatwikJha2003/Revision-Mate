@@ -9,7 +9,7 @@
 - This was designed for Windows OS
 
 # Requirements
-- Install PostgreSQL. Password is 12345. You can change settings in revision_mate\settings.py under DATABASES
+- Install PostgreSQL. Password is 12345. You can change settings in revision_mate\settings.py under DATABASES. Create a database (e.g. "revision_mate")
 - Install python and ReactJS
 - ```pip install -r requirements.txt```
 - ```pip install django```
