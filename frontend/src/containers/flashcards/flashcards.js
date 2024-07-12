@@ -40,6 +40,7 @@ function Flashcards({route,navigation}) {
     axios.get("/flashcards", {
       params: {deckId:id}
     }).then(response => {
+      console.log(response);
       setCards([...response.data]);
       setAnswerShown(false);
       setQuestionSide(true);
@@ -119,8 +120,12 @@ function Flashcards({route,navigation}) {
         </div>
         <div onClick={flip} className={(isQuestionSide ? styles.flashcard_question:styles.flashcard_answer)}>
           <div className={styles.flashcard} key="{cards.length && cards[index].id}">
-            <div className={styles.question_side}>{cards.length && cards[index].question}</div>
-            <div className={styles.answer_side}>{isAnswerShown && cards.length && cards[index].answer}</div>
+            <div className={styles.question_side}>{cards.length && cards[index].question}
+              <img className={styles.flashcard_images} src={cards.length && "http:\/\/localhost:8000"+cards[index].question_image}/>
+            </div>
+            <div className={styles.answer_side}>{isAnswerShown && cards.length && cards[index].answer}
+              <img className={styles.flashcard_images} src={cards.length && "http:\/\/localhost:8000"+cards[index].question_image}/>
+            </div>
           </div>
         </div>
         <div className={styles.button_container_two}>

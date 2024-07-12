@@ -16,10 +16,16 @@ class Deck(models.Model):
 	share = models.BooleanField()
 	rating = models.DecimalField(max_digits=2, decimal_places=1, default=0)
 
+# Location to save images in
+def set_image_path(instance, filename):
+	return "{}/{}".format(instance.owner.id, filename)
+
 # Database for flashcards
 class Flashcard(models.Model):
 	question = models.TextField()
+	question_image = models.ImageField(upload_to=set_image_path,null=True)
 	answer = models.TextField()
+	answer_image = models.ImageField(upload_to=set_image_path,null=True)
 	deck = models.ForeignKey(Deck, on_delete=models.CASCADE, null=True)
 	owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 

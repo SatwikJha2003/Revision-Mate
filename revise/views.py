@@ -183,13 +183,16 @@ class ShareView(viewsets.ModelViewSet):
         return Response("Success!")
 
 class DeckMakingView(viewsets.ViewSet):
+    serializer_class = FileUploadSerializer
 
     def create(self, request):
         deck_name = request.data["deckname"]
         question = request.POST.getlist("question")
         answer = request.POST.getlist("answer")
+        files = request.FILES
         share = ""
 
+        # Determine if deck is public or private
         if "share" in request.data:
             share = True
         else:
@@ -204,7 +207,13 @@ class DeckMakingView(viewsets.ViewSet):
 
         # Create flashcards
         for i in range(len(question)):
-            flashcard = Flashcard(question=question[i],answer=answer[i],deck=deck,owner=request.user)
+            # Save files and get path
+            question_image = files.get("question_image-" + str(i))
+            answer_image = files.get("answer_image-" + str(i))
+            #question_path = utils.save_file(request.user.id, question_image)
+            #answer_path = utils.save_file(request.user.id, answer_image)
+
+            flashcard = Flashcard(question=question[i],question_image=question_image,answer=answer[i],answer_image=answer_image,deck=deck,owner=request.user)
             flashcard.save()
         return Response({"success":"Deck created", "id":deck.id})
 

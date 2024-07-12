@@ -14,7 +14,7 @@ class DeckSerializer(serializers.ModelSerializer):
 class FlashcardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flashcard
-        fields = ("id", "question", "answer", "owner")
+        fields = ("id", "question", "question_image", "answer", "answer_image", "owner")
 
 class HistorySerializer(serializers.ModelSerializer):
     class Meta:

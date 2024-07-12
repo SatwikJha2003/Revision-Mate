@@ -74,12 +74,9 @@ html {
     transform: rotateY(180deg);
 }
 
-.deck {
-
-}
-
-.deck_selected {
-    font-weight: bold;
+.flashcard_images {
+	max-width: 70%;
+	max-height: 70%;
 }
 
 .button_container_one {

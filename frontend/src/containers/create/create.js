@@ -29,9 +29,7 @@ function Create() {
   const handleForm = (event) => {
     event.preventDefault();
     var formData = new FormData(event.target);
-        for (var pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]); 
-}
+    
     axios.post("/deckMaking/", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -86,11 +84,11 @@ function Create() {
                     defaultValue={element.question}
                     className={styles.deck_textarea}
                   />
-                  <label className={styles.create_image} htmlFor="question_image">Attach image</label>
+                  <label className={styles.create_image} htmlFor={"question_image-"+i}>Attach image</label>
                   <input 
                     type="file" 
-                    name="question_image" 
-                    id="question_image" 
+                    name={"question_image-"+i} 
+                    id={"question_image-"+i} 
                     className={styles.attach_image}
                     onChange={handleChange}
                   />
@@ -103,11 +101,11 @@ function Create() {
                     defaultValue={element.answer}
                     className={styles.deck_textarea}
                   />
-                  <label className={styles.create_image} htmlFor="answer_image">Attach image</label>
+                  <label className={styles.create_image} htmlFor={"answer_image-"+i}>Attach image</label>
                   <input 
                     type="file" 
-                    name="answer_image" 
-                    id="answer_image" 
+                    name={"answer_image-"+i} 
+                    id={"answer_image-"+i} 
                     className={styles.attach_image}
                     onChange={handleChange}
                   />

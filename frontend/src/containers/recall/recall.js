@@ -104,8 +104,12 @@ function Recall({route,navigation}) {
       <div className={styles.recall_container}>
         <div onClick={flip} className={(isQuestionSide ? styles.recall_question:styles.recall_answer)}>
           <div className={styles.flashcard} key="{cards.length && cards[index].id}">
-            <div className={styles.question_side}>{cards.length && cards[index].question}</div>
-            <div className={styles.answer_side}>{isAnswerShown && cards.length && cards[index].answer}</div>
+            <div className={styles.question_side}>{cards.length && cards[index].question}
+              <img className={styles.flashcard_images} src={cards.length && "http:\/\/localhost:8000"+cards[index].question_image}/>
+            </div>
+            <div className={styles.answer_side}>{isAnswerShown && cards.length && cards[index].answer}
+              <img className={styles.flashcard_images} src={cards.length && "http:\/\/localhost:8000"+cards[index].question_image}/>
+            </div>
           </div>
         </div>
         {isAnswerShown ? (

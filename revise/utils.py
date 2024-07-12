@@ -39,6 +39,28 @@ def check_if_image(file):
 	except:
 		return False
 
+# Function to save image files
+def save_file(user, file):
+
+	if not file:
+		return None
+
+	is_image = check_if_image(file)
+	if not is_image:
+		return None
+
+	filepath = "static/" + str(user)
+
+	# Make directory if it does not exist
+	Path(filepath).mkdir(parents=True, exist_ok=True)
+
+	# Save image
+	filepath += "/" + file.name
+	with open(filepath, "wb") as new_file:
+		for chunk in file.chunks():
+			new_file.write(chunk)
+	return filepath
+
 # OCR function
 def get_text_from_image():
 	pytesseract.pytesseract.tesseract_cmd = r'C:\Users\chngw\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
