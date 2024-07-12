@@ -19,10 +19,9 @@ function NavBar() {
 	} else {
 		return (
 			<nav className={styles.navigation}>
-				<NavLink to="/flashcards" className={styles.nav_link}>Flashcards</NavLink>
-				<NavLink to="/deck" className={styles.nav_link}>Deck</NavLink>
-				<NavLink to="/summary" className={styles.nav_link}>Summary</NavLink>
-				<NavLink to="/share" className={styles.nav_link}>Share</NavLink>
+				<NavLink to="/study" className={styles.nav_link}>Study</NavLink>
+				<NavLink to="/create" className={styles.nav_link}>Create</NavLink>
+				<NavLink to="/decks" className={styles.nav_link}>Decks</NavLink>
 				<NavLink to="/logout" className={styles.nav_link}>Logout</NavLink>
 			</nav>
 		)

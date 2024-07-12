@@ -14,6 +14,11 @@ router.register('flashcards', views.FlashcardsView, basename="flashcards")
 router.register('summary', views.SummaryView, basename="summary")
 router.register('share', views.ShareView, basename="share")
 router.register('delete', views.DeleteUserView, basename="delete")
+router.register('deckMaking', views.DeckMakingView, basename="deckMaking")
+router.register('history', views.HistoryView, basename="history")
+router.register('confidence', views.ConfidenceView, basename="confidence")
+router.register('ratings', views.RatingsView, basename="ratings")
+router.register('comments', views.CommentsView, basename="comments")
 
 urlpatterns = [
 	path('', include(router.urls)),

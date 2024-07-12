@@ -13,18 +13,36 @@ class Users(models.Model):
 class Deck(models.Model):
 	deck_name = models.CharField(max_length=100, default="")
 	owner = models.ForeignKey(User, on_delete=models.CASCADE)
-	share = models.CharField(max_length=20, default="private")
-
-	# Deck names should be unique for a single user
-	# However, deck names can appear multiple times if users are different
-	class Meta:
-		constraints = [
-			models.UniqueConstraint(fields=["deck_name", "owner"], name="owner decks")
-		]
+	share = models.BooleanField()
+	rating = models.DecimalField(max_digits=2, decimal_places=1, default=0)
 
 # Database for flashcards
 class Flashcard(models.Model):
 	question = models.TextField()
 	answer = models.TextField()
-	deck = models.ManyToManyField(Deck)
+	deck = models.ForeignKey(Deck, on_delete=models.CASCADE, null=True)
 	owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+# Database for decks users used. This includes their ratings
+class History(models.Model):
+	user = models.IntegerField()
+	deck = models.IntegerField()
+	timestamp = models.DateTimeField()
+	rating = models.IntegerField(default=0)
+
+	class Meta:
+		constraints = [
+            models.UniqueConstraint(fields=['user', 'deck'], name='history pairing')
+        ]
+
+# Database for comments
+class Comment(models.Model):
+	user = models.IntegerField()
+	deck = models.IntegerField()
+	comment = models.TextField()
+
+# Database for flashcard confidence
+class Confidence(models.Model):
+	user = models.IntegerField()
+	flashcard = models.IntegerField()
+	confidence = models.IntegerField()

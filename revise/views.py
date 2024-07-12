@@ -1,14 +1,16 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+from django.db.models import Avg
 from django.shortcuts import render
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer, DeckSerializer, FlashcardSerializer, FileUploadSerializer
-from .models import Users, Deck, Flashcard
+from .serializers import UserSerializer, DeckSerializer, FlashcardSerializer, FileUploadSerializer, CommentSerializer, HistorySerializer
+from .models import Users, Deck, Flashcard, History, Comment, Confidence
 from . import utils
 
 # Create your views here.
@@ -65,9 +67,9 @@ class LoginView(viewsets.ViewSet):
 
         if user:
             login(request,user)
-            return Response("Success")
+            return Response({"success":"Login successful!","id":user.id,"username":username})
         else:
-            return Response("Credentials incorrect!")
+            return Response({"error":"Credentials incorrect!"})
 
 class LogoutView(viewsets.ViewSet):
 
@@ -91,10 +93,9 @@ class FlashcardsView(viewsets.ModelViewSet):
     queryset = Flashcard.objects.all()
 
     def list(self, request):
-        print(request.query_params["deck_name"])
-        deck_name = request.query_params["deck_name"]
-        if deck_name:
-            deck = Deck.objects.get(deck_name=deck_name, owner=request.user.id)
+        deckId = request.query_params["deckId"]
+        if deckId:
+            deck = Deck.objects.get(id=deckId)
             flashcards = deck.flashcard_set.all()
             flashcards = FlashcardSerializer(flashcards, many=True)
             return Response(flashcards.data)
@@ -118,7 +119,7 @@ class DecksView(viewsets.ModelViewSet):
     serializer_class = DeckSerializer
 
     def list(self, request):
-        decks = Deck.objects.all().filter(owner=request.user.id)
+        decks = Deck.objects.all().filter(share=True)
         decks = DeckSerializer(decks, many=True)
         return Response(decks.data)
 
@@ -180,6 +181,127 @@ class ShareView(viewsets.ModelViewSet):
                 request.POST["answer"] = flashcard["answer"]
                 FlashcardsView.create(self, request)
         return Response("Success!")
+
+class DeckMakingView(viewsets.ViewSet):
+
+    def create(self, request):
+        deck_name = request.data["deckname"]
+        question = request.POST.getlist("question")
+        answer = request.POST.getlist("answer")
+        share = ""
+
+        if "share" in request.data:
+            share = True
+        else:
+            share = False
+
+        if not deck_name:
+            return Response({"error":"Deck name required!"})
+
+        # Create deck
+        deck = Deck(deck_name=deck_name, owner=request.user, share=share)
+        deck.save()
+
+        # Create flashcards
+        for i in range(len(question)):
+            flashcard = Flashcard(question=question[i],answer=answer[i],deck=deck,owner=request.user)
+            flashcard.save()
+        return Response({"success":"Deck created", "id":deck.id})
+
+class HistoryView(viewsets.ViewSet):
+
+    def list(self, request):
+        deckIds = []
+        times = []
+        decks = History.objects.all().filter(user=request.user.id).order_by("deck")
+
+        for deck in decks:
+            deckIds.append(deck.deck)
+            times.append(deck.timestamp)
+
+        userDecks = Deck.objects.all().filter(id__in=deckIds)
+        userDecks = DeckSerializer(userDecks, many=True)
+
+        for i in range(len(userDecks.data)):
+            userDecks.data[i]["timestamp"] = times[i]
+
+        return Response({"success":"Decks retrieved", "decks":userDecks.data})
+
+    def create(self, request):
+        try:
+            deckId = request.data["deckId"]
+            history = History.objects.all().filter(user=request.user.id, deck=deckId)
+
+            if history:
+                history.update(timestamp=timezone.localtime())
+            else:
+                history = History(user=request.user.id, deck=deckId, timestamp=timezone.localtime())
+                history.save()
+            return Response({"success":"History updated"})
+        except IntegrityError:
+            return Response({"error":"Record already exists"})
+
+class ConfidenceView(viewsets.ViewSet):
+
+    def create(self, request):
+        for c in request.data:
+            flashcard = c
+            confidence_level = request.data[c]
+            confidence = Confidence(user=request.user.id, flashcard=flashcard, confidence=confidence_level)
+            confidence.save()
+        return Response({"success":"Confidence updated"})
+
+class RatingsView(viewsets.ViewSet):
+
+    def list(self, request):
+        # Get individual rating
+        deckId = request.query_params["deckId"]
+        userRating = 0
+
+        # Get individual rating
+        history = History.objects.all().filter(user=request.user.id, deck=deckId)
+        history = HistorySerializer(history, many=True)
+
+        if history:
+            userRating = history.data[0]["rating"]
+
+        # Get average rating
+        history = History.objects.all().filter(deck=deckId)
+        average_rating = history.aggregate(Avg("rating"))["rating__avg"]
+
+        return Response({"success":"Ratings retrieved", "user rating":userRating, "average rating":average_rating})
+
+    def post(self, request):
+        deckId = request.data["deckId"]
+        userRating = int(request.data["userRating"]) + 1
+        history = History.objects.all().filter(user=request.user.id, deck=deckId)
+        if history:
+            history.update(rating=userRating)
+        else:
+            history = History(user=request.user.id, rating=userRating)
+            history.save()
+
+        # Get new average rating
+        average_rating = History.objects.all().filter(deck=deckId).aggregate(Avg("rating"))["rating__avg"]
+        print(average_rating)
+        return Response({"success":"Rating updated", "average rating":average_rating})
+
+class CommentsView(viewsets.ViewSet):
+
+    def list(self, request):
+        deckId = request.query_params["deckId"]
+        comments = Comment.objects.all().filter(deck=deckId)
+        comments = CommentSerializer(comments, many=True)
+        return Response({"success":"Comments retrieved", "comments":comments.data})
+
+    def create(self, request):
+        deckId = request.data["deckId"]
+        comment = request.data["comment"]
+
+        # Save comment
+        comment = Comment(user=request.user.id, deck=deckId, comment=comment)
+        comment.save()
+        return Response({"success":"Comment added"})
 
 class SummaryView(viewsets.ViewSet):
     serializer_class = FileUploadSerializer

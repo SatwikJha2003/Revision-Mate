@@ -22,16 +22,17 @@ function Login() {
         "X-CSRFToken": formData.get("csrf-token")
       }
     }).then(response => {
-      if (response.data === "Success") {
+      if (response.data.success) {
         dispatch(login({
-          name: "hello",
+          id: response.data.id,
+          username: response.data.username,
           loggedIn: true
           })
         )
-        navigate("/flashcards");
+        navigate("/study");
       }
       else
-        setErrorMessage(response.data);
+        setErrorMessage(response.data.error);
     });
   }
 

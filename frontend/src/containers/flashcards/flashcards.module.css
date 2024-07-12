@@ -11,9 +11,9 @@ html {
 	height: 100%;
 }
 
-.flashcards_list {
+.flashcards_dashboard {
 	background-color: #b3ffb3;
-	width: 14.3%;
+	width: 20%;
 	height: 100%;
 	font-size: 250%;
 }
@@ -82,7 +82,30 @@ html {
     font-weight: bold;
 }
 
-.button_container {
+.button_container_one {
+	display: flex;
+	margin-bottom: 10px;
+	gap: 10px;
+}
+
+.flashcards_deckname {
+	font-size: 200%;
+	font-weight: bold;
+}
+
+.test, .edit {
+	display: flex;
+	font-weight: bold;
+	font-size: 125%;
+	background-color: #b3ffb3;
+	border-radius: 10px;
+	height: 50px;
+	width: 150px;
+	align-items: center;
+    justify-content: center;
+}
+
+.button_container_two {
 	margin-top: 10px;
 }
 
@@ -91,7 +114,7 @@ html {
 	font-weight: bold;
 	font-size: 125%;
 	background-color: #b3ffb3;
-	border-radius: 25px;
+	border-radius: 10px;
 	height: 50px;
 	width: 150px;
 	align-items: center;

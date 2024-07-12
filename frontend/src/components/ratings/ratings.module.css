@@ -1,0 +1,11 @@
+.rating {
+	font-family: "Nunito Sans";
+}
+
+.star_unselected {
+	color: black;
+}
+
+.star_selected {
+	color: yellow;
+}
