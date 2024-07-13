@@ -118,9 +118,25 @@ class FlashcardsView(viewsets.ModelViewSet):
 class DecksView(viewsets.ModelViewSet):
     serializer_class = DeckSerializer
 
+    # Get decks. Include information such as creator, rating and number of views
     def list(self, request):
         decks = Deck.objects.all().filter(share=True)
         decks = DeckSerializer(decks, many=True)
+
+        for deck in decks.data:
+            history = History.objects.all().filter(deck=deck["id"])
+            # Get creator
+            creator = User.objects.all().filter(id=deck["owner"])
+            deck["creator"] = creator[0].username
+
+            # Get rating among users who rated
+            average_rating = history.exclude(rating=0).aggregate(Avg("rating"))["rating__avg"]
+            deck["rating"] = average_rating
+
+            # Get number of views
+            views = history.count()
+            deck["views"] = views
+
         return Response(decks.data)
 
     def create(self, request):
@@ -210,8 +226,6 @@ class DeckMakingView(viewsets.ViewSet):
             # Save files and get path
             question_image = files.get("question_image-" + str(i))
             answer_image = files.get("answer_image-" + str(i))
-            #question_path = utils.save_file(request.user.id, question_image)
-            #answer_path = utils.save_file(request.user.id, answer_image)
 
             flashcard = Flashcard(question=question[i],question_image=question_image,answer=answer[i],answer_image=answer_image,deck=deck,owner=request.user)
             flashcard.save()
@@ -274,8 +288,8 @@ class RatingsView(viewsets.ViewSet):
         if history:
             userRating = history.data[0]["rating"]
 
-        # Get average rating
-        history = History.objects.all().filter(deck=deckId)
+        # Get average rating among users who rated
+        history = History.objects.all().filter(deck=deckId).exclude(rating=0)
         average_rating = history.aggregate(Avg("rating"))["rating__avg"]
 
         return Response({"success":"Ratings retrieved", "user rating":userRating, "average rating":average_rating})

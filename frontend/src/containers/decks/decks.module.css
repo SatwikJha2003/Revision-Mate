@@ -33,6 +33,10 @@ html {
 	border-radius: 10px;
 }
 
+.decks_deck:hover {
+	background-color: #ffb3b3;
+}
+
 .decks_button_container {
 	position: absolute;
 	width: 40%;
@@ -55,42 +59,4 @@ html {
 
 .decks_next {
 	float: right;
-}
-
-.download_form {
-	font-size: 150%;
-	margin-top: 1%;
-	display: flex;
-	flex-direction: row;
-	gap: 5px;
-}
-
-.download_input {
-	border-radius: 25px;
-	font-size: 110%;
-	border: 0;
-	outline: 0;
-    padding: 20px; 
-    height: 5px;
-    width: 20%;
-    padding-right: 1%;
-}
-
-.download_buttons_container {
-
-}
-
-.download_submits {
-	border-radius: 25px;
-	border: 0;
-	outline: 0;
-    padding: 20px; 
-    height: 15px;
-    margin-right: 10px;
-}
-
-.download_span {
-	font-size: 200%;
-	position: relative;
-	bottom: 12px;
 }

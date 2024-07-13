@@ -14,7 +14,6 @@ class Deck(models.Model):
 	deck_name = models.CharField(max_length=100, default="")
 	owner = models.ForeignKey(User, on_delete=models.CASCADE)
 	share = models.BooleanField()
-	rating = models.DecimalField(max_digits=2, decimal_places=1, default=0)
 
 # Location to save images in
 def set_image_path(instance, filename):
