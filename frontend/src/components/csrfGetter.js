@@ -11,9 +11,11 @@ function CSRFGetter(props, ref) {
 				await axios.get("/csrf");
 			} catch (err) {}
 		}
-		getData();
-		setCsrf(getCSRF());
-	}, []);
+		if (!csrf) {
+			getData();
+			setCsrf(getCSRF());
+		}
+	}, [csrf]);
 
 	return (
 		<input type="hidden" name="csrf-token" value={csrf} ref={ref}/>

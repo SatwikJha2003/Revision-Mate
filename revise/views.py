@@ -9,8 +9,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer, DeckSerializer, FlashcardSerializer, FileUploadSerializer, CommentSerializer, HistorySerializer
-from .models import Users, Deck, Flashcard, History, Comment, Confidence
+from .serializers import UserSerializer, UsersSerializer, DeckSerializer, FlashcardSerializer, FileUploadSerializer, CommentSerializer, HistorySerializer, FriendsSerializer
+from .models import Users, Deck, Flashcard, History, Comment, Confidence, Friends
 from . import utils
 
 # Create your views here.
@@ -86,6 +86,14 @@ class CSRFToken(APIView):
 
     def get(self, request):
         return Response("CSRF set")
+
+class UsersView(viewsets.ModelViewSet):
+
+    def list(self, request):
+        username = request.query_params["username"]
+        user = User.objects.all().filter(username__contains=username)
+        user = UsersSerializer(user, many=True)
+        return Response({"success":"Users retrieved","users":user.data})
 
 class FlashcardsView(viewsets.ModelViewSet):
     permission = (permissions.AllowAny, )
@@ -234,9 +242,13 @@ class DeckMakingView(viewsets.ViewSet):
 class HistoryView(viewsets.ViewSet):
 
     def list(self, request):
+        user = request.query_params["user"]
+        if user == "-1":
+            user = request.user.id
+        print(user)
         deckIds = []
         times = []
-        decks = History.objects.all().filter(user=request.user.id).order_by("deck")
+        decks = History.objects.all().filter(user=user).order_by("deck")
 
         for deck in decks:
             deckIds.append(deck.deck)
@@ -325,6 +337,64 @@ class CommentsView(viewsets.ViewSet):
         comment = Comment(user=request.user.id, deck=deckId, comment=comment)
         comment.save()
         return Response({"success":"Comment added"})
+
+class FriendsView(viewsets.ViewSet):
+
+    def list(self, request):
+        friendWith = Friends.objects.all().filter(user_one=request.user.id, friends=True)
+        friendOf = Friends.objects.all().filter(user_two=request.user.id, friends=True)
+        friendWith = FriendsSerializer(friendWith, many=True)
+        friendOf = FriendsSerializer(friendOf, many=True)
+
+        # Swap order of friendOf
+        for friend in friendOf.data:
+            temp = friend["user_one"]
+            friend["user_one"] = friend["user_two"]
+            friend["user_two"] = temp
+
+        # Get name of friends
+        for friend in friendWith.data:
+            user = User.objects.all().filter(id=friend["user_two"])
+            friend["username"] = user[0].username
+
+        for friend in friendOf.data:
+            user = User.objects.all().filter(id=friend["user_two"])
+            friend["username"] = user[0].username
+
+        return Response({"success":"Friends retrieved", "friends":friendWith.data + friendOf.data})
+
+class RequestsView(viewsets.ViewSet):
+
+    def list(self, request):
+        sent = Friends.objects.all().filter(user_one=request.user.id, friends=False)
+        sent = FriendsSerializer(sent, many=True)
+        received = Friends.objects.all().filter(user_two=request.user.id, friends=False)
+        received = FriendsSerializer(received, many=True)
+
+        # Get names
+        for request in sent.data:
+            user = User.objects.all().filter(id=request["user_two"])
+            request["username"] = user[0].username
+
+        for request in received.data:
+            user = User.objects.all().filter(id=request["user_one"])
+            request["username"] = user[0].username
+
+        return Response({"success":"Requests retrieved", "sent":sent.data, "received":received.data})
+
+
+    def create(self, request):
+        requested = request.data["requested"]
+        try:
+            friend = Friends.objects.filter(user_one=requested, user_two=request.user.id)
+            if friend:
+                friend.update(friends=True)
+            else:
+                friend = Friends(user_one=request.user.id, user_two=requested, friends=False)
+                friend.save()
+        except:
+            pass
+        return Response({"success":"Request sent"})
 
 class SummaryView(viewsets.ViewSet):
     serializer_class = FileUploadSerializer

@@ -6,9 +6,9 @@ import axios from "axios";
 import CSRF from "../../components/csrfGetter";
 import Redirect from "../../components/redirect";
 
-import styles from "./study.module.css";
+import styles from "./friend.module.css";
 
-function Study({route,navigation}) {
+function Friend({route,navigation}) {
   const isLoggedIn = useSelector(selectUser);
   const [decks, setDecks] = useState([]);
   const [counter, setCounter] = useState(0);
@@ -89,4 +89,4 @@ function Study({route,navigation}) {
 
 }
 
-export default Study;
+export default Friend;

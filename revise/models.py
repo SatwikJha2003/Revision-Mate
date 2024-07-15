@@ -51,3 +51,14 @@ class Confidence(models.Model):
 	user = models.IntegerField()
 	flashcard = models.IntegerField()
 	confidence = models.IntegerField()
+
+# Database for friends
+class Friends(models.Model):
+	user_one = models.IntegerField()
+	user_two = models.IntegerField()
+	friends = models.BooleanField()
+
+	class Meta:
+		constraints = [
+			models.UniqueConstraint(fields=['user_one', 'user_two'], name='friends')
+		]

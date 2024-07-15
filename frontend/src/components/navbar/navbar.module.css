@@ -1,0 +1,15 @@
+.navigation {
+	font-family: "Nunito Sans";
+	font-size: 300%;
+	background-color: #b3b3ff;
+}
+
+.nav_link {
+	text-decoration: none;
+	color: black;
+	padding: 0px 20px 0px;
+}
+
+.nav_link:hover {
+	background-color: #ffb3b3;
+}

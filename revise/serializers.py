@@ -1,10 +1,16 @@
 from rest_framework import serializers
-from .models import Users, Flashcard, Deck, History, Comment, Confidence
+from django.contrib.auth.models import User
+from .models import Users, Flashcard, Deck, History, Comment, Confidence, Friends
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = ("username", "password1", "password2")
+
+class UsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username")        
 
 class DeckSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +36,11 @@ class ConfidenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Confidence
         fields = ("user", "flashcard", "confidence")
+
+class FriendsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Friends
+        fields = ("user_one", "user_two")
 
 class FileUploadSerializer(serializers.Serializer):
     uploaded_file = serializers.FileField()

@@ -13,12 +13,13 @@ import Logout from "./containers/logout/logout";
 import Flashcards from "./containers/flashcards/flashcards";
 import Deck from "./containers/deck/deck";
 import Summary from "./containers/summary/summary";
-import Share from "./containers/share/share";
 import Decks from "./containers/decks/decks";
 import Create from "./containers/create/create";
 import Study from "./containers/study/study";
 import Recall from "./containers/recall/recall";
-import NavBar from "./components/navbar";
+import Friend from "./containers/friend/friend";
+import NavBar from "./components/navbar/navbar";
+import Friends from "./components/friends/friends"
 
 function App() {
   var persistor = persistStore(store);
@@ -35,13 +36,14 @@ function App() {
             <Route path="/flashcards" element={<Flashcards />} />
             <Route path="/deck" element={<Deck />} /> 
             <Route path="/summary" element={<Summary />} />
-            <Route path="/share" element={<Share />} />
             <Route path="/logout" element={<Logout />}/>
             <Route path="/decks" element={<Decks />}/>
             <Route path="/create" element={<Create />}/>
             <Route path="/study" element={<Study />}/>
+            <Route path="/friend" element={<Friend />}/>
             <Route path="/recall" element={<Recall />}/>
           </Routes>
+          <Friends />
         </Router>
       </PersistGate>
     </Provider>

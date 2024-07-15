@@ -40,7 +40,6 @@ function Flashcards({route,navigation}) {
     axios.get("/flashcards", {
       params: {deckId:id}
     }).then(response => {
-      console.log(response);
       setCards([...response.data]);
       setAnswerShown(false);
       setQuestionSide(true);
@@ -92,7 +91,14 @@ function Flashcards({route,navigation}) {
     setIndex((index - 1 + cards.length) % cards.length);
   }
 
-  /*Get user's decks*/
+  // Set image
+  const SetImage = ({src}) => {
+    console.log(src);
+    if (src)
+      return <img className={styles.flashcard_images} src={"http:\/\/localhost:8000"+src}/>
+  }
+
+  // Get user's decks
   useEffect(() => {
     if (id) {
       document.body.className = styles.flashcards_body;
@@ -102,6 +108,7 @@ function Flashcards({route,navigation}) {
       getFlashcards();
     }
   }, []);
+
 
   if (!isLoggedIn)
     return <Redirect />;
@@ -121,10 +128,10 @@ function Flashcards({route,navigation}) {
         <div onClick={flip} className={(isQuestionSide ? styles.flashcard_question:styles.flashcard_answer)}>
           <div className={styles.flashcard} key="{cards.length && cards[index].id}">
             <div className={styles.question_side}>{cards.length && cards[index].question}
-              <img className={styles.flashcard_images} src={cards.length && "http:\/\/localhost:8000"+cards[index].question_image}/>
+              <SetImage src={cards.length && cards[index].question_image}/>
             </div>
             <div className={styles.answer_side}>{isAnswerShown && cards.length && cards[index].answer}
-              <img className={styles.flashcard_images} src={cards.length && "http:\/\/localhost:8000"+cards[index].question_image}/>
+              <SetImage src={cards.length && cards[index].answer_image}/>
             </div>
           </div>
         </div>
