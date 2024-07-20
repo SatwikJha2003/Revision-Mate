@@ -6,6 +6,7 @@ from pathlib import Path
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
+import random
 
 # Password strength checker
 def check_password_strength(password):
@@ -29,6 +30,32 @@ def check_password_strength(password):
 		return (True,"Success")
 	else:
 		return (False,"Password should have at least 1 alphabet, 1 digit and 1 special character!")
+
+# Get 10 appropriate flashcards for testing
+# We get based on how many times a card is tested and score
+def select_flashcards(confidence, score, count):
+	flashcards = []
+	count_threshold = count["count__sum"]/len(confidence)
+	score_threshold = score["confidence__sum"]/len(confidence)
+	print(count_threshold)
+
+	for c in confidence:
+		if c.count < count_threshold/2:
+			flashcards.append(c.flashcard)
+			continue
+		if c.confidence < score_threshold:
+			flashcards.append(c.flashcard)
+			continue
+		if len(flashcards) == 10:
+			return flashcards
+
+	# If there are less than 10 flashcards, just randomly select cards to test
+	if len(flashcards) < 10:
+		n = 10 - len(flashcards)
+		for i in range(n):
+			choice = random.randint(0, len(confidence) - 1)
+			flashcards.append(confidence[choice].flashcard)
+		return flashcards
 
 # Check if file is image file
 def check_if_image(file):

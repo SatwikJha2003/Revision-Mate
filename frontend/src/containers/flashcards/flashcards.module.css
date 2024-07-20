@@ -8,7 +8,7 @@ html {
 }
 
 .flashcards_main {
-	height: 100%;
+	height: 92%;
 }
 
 .flashcards_dashboard {
@@ -53,6 +53,10 @@ html {
     font-size: 500%;
 }
 
+.help {
+	font-size: 200%;
+}
+
 .question_side, .answer_side {
     width: 100%;
     height: 100%;
@@ -90,7 +94,7 @@ html {
 	font-weight: bold;
 }
 
-.test, .edit {
+.test, .reset, .edit {
 	display: flex;
 	font-weight: bold;
 	font-size: 125%;
@@ -124,4 +128,8 @@ html {
 
 .shuffle {
 	margin-right: 25%;
+}
+
+.test:hover, .reset:hover, .edit:hover, .next:hover, .previous:hover, .shuffle:hover {
+	background-color: #ffb3b3;
 }

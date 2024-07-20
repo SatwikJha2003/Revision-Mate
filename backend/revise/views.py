@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.db.models import Avg
+from django.db.models import Sum, Avg
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -276,15 +276,74 @@ class HistoryView(viewsets.ViewSet):
         except IntegrityError:
             return Response({"error":"Record already exists"})
 
+class RecallView(viewsets.ViewSet):
+
+    def list(self, request):
+        deckId = request.query_params["deckId"]
+        questionIds = []
+        test = []
+
+        # Get flashcards from deck
+        deck = Deck.objects.get(id=deckId)
+        flashcards = deck.flashcard_set.all()
+        flashcards = FlashcardSerializer(flashcards, many=True)
+
+        for flashcard in flashcards.data:
+            questionIds.append(flashcard["id"])
+
+        # Get user's confidence of each question if any
+        confidence = Confidence.objects.all().filter(user=request.user.id, flashcard__in=questionIds)
+
+        # If no confidence, initialize all confidence to 0
+        if not confidence:
+            for questionId in questionIds:
+                confidence = Confidence(user=request.user.id, flashcard=questionId, count=0, confidence=0)
+                confidence.save()
+            confidence = Confidence.objects.all().filter(user=request.user.id, flashcard__in=questionIds)
+
+        score = confidence.aggregate(Sum("confidence"))
+        count = confidence.aggregate(Sum("count"))
+        flashcards_id_list = utils.select_flashcards(confidence, score, count)
+
+        for i in range(10):
+            question = deck.flashcard_set.filter(id=flashcards_id_list[i])
+            question = FlashcardSerializer(question, many=True)
+            test += question.data
+
+        return Response({"success":"Flashcards retrieved", "flashcards":test})
+
 class ConfidenceView(viewsets.ViewSet):
 
     def create(self, request):
-        for c in request.data:
-            flashcard = c
-            confidence_level = request.data[c]
-            confidence = Confidence(user=request.user.id, flashcard=flashcard, confidence=confidence_level)
+        flashcard = request.data["id"]
+        score = request.data["confidence"]
+        confidence = Confidence.objects.all().filter(user=request.user.id, flashcard=flashcard)
+
+        # If record exists, update count and score
+        if confidence:
+            total_score = float(confidence[0].count * confidence[0].confidence) + score
+            count = confidence[0].count + 1
+            score = total_score/count
+            confidence.update(count=count,confidence=score)
+        else:
+            confidence = Confidence(user=request.user.id, flashcard=flashcard, count=1, confidence=score)
             confidence.save()
+
         return Response({"success":"Confidence updated"})
+
+    # Reset confidence by deleting records
+    def delete(self, request):
+        # Get cards
+        deckId = request.query_params["deckId"]
+        deck = Deck.objects.get(id=deckId)
+        flashcards = deck.flashcard_set.all()
+        flashcards = FlashcardSerializer(flashcards, many=True)
+        print(flashcards.data)
+
+        for flashcard in flashcards.data:
+            Confidence.objects.filter(user=request.user.id,flashcard=flashcard["id"]).delete()
+
+        return Response({"success":"Confidence reset"})
 
 class RatingsView(viewsets.ViewSet):
 
@@ -386,7 +445,7 @@ class RequestsView(viewsets.ViewSet):
     def create(self, request):
         requested = request.data["requested"]
         try:
-            friend = Friends.objects.filter(user_one=requested, user_two=request.user.id)
+            friend = Friends.objects.filter(user_one=requested, user_two=request.user.id) | Friends.objects.filter(user_one=request.user.id, user_two=requested)
             if friend:
                 friend.update(friends=True)
             else:

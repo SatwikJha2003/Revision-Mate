@@ -17,14 +17,15 @@ function Recall({route,navigation}) {
   const [confidenceArray, setConfidenceArray] = useState([0,0,0,0])
   const [confidence, setConfidence] = useState(new FormData());
   const isLoggedIn = useSelector(selectUser);
+  const navigate = useNavigate();
   const location = useLocation();
 
   // Function to get flashcards and shuffle them
   const getFlashcards = () => {
-    axios.get("/flashcards", {
+    axios.get("/recall", {
       params: {deckId:location.state.id}
     }).then(response => {
-      setCards([...response.data]);
+      setCards([...response.data.flashcards]);
       setAnswerShown(false);
       setQuestionSide(true);
       var cards = response.data;
@@ -34,15 +35,6 @@ function Recall({route,navigation}) {
         cards[i] = cards[random_i];
         cards[random_i] = temp;
       }
-    });
-  }
-
-  const handleDeckForm = (event) => {
-    event.preventDefault();
-    axios.get("/flashcards", {
-      params: {deck_name:deckName}
-    }).then(response => {
-      console.log(response.data);
     });
   }
 
@@ -64,22 +56,24 @@ function Recall({route,navigation}) {
 
   // Function to increment count of each confidence level
   const increaseConfidence = (i) => {
-    const newConfidenceArray = confidenceArray.map((count,index) => {
-      if (i == index)
-        return count + 1;
-      else
-        return count;
-    })
-    setConfidenceArray(newConfidenceArray);
-    confidence.append(cards[index].id,i);
+    const confidence = {
+      id: cards[index].id,
+      confidence: i
+    };
 
     if (index+1 != cards.length) {
       setQuestionSide(true);
       setAnswerShown(false);
       setIndex(index+1);
+    } else {
+      navigate("/flashcards", {state:{id:location.state.id, deckName:location.state.deckName}});
     }
-    else
-      postConfidence();
+
+    axios.post("/confidence/", confidence, {
+      headers: {
+        "X-CSRFToken": getCSRF()
+      }
+    })
   }
 
   //Get deck's flashcards
@@ -87,14 +81,16 @@ function Recall({route,navigation}) {
     document.body.className = styles.recall_body;
     const root = document.getElementById('root');
     root.style.cssText = "height: 100%;";
+    setConfidence();
     getFlashcards();
   }, []);
 
-  /*const deckList = decks.filter(element=>element.deck_name.toLowerCase().includes(search))
-                        .map(deck => <li key={deck.id} 
-                                      value={deck.deck_name}
-                                      className={(deckName === deck.deck_name ? styles.deck_selected:styles.deck)}
-                                     >{deck.deck_name}</li>);*/
+  // Set image
+  const SetImage = ({src}) => {
+    console.log(src);
+    if (src)
+      return <img className={styles.flashcard_images} src={"http:\/\/localhost:8000"+src}/>
+  }
 
   if (!isLoggedIn)
     return <Redirect />;
@@ -105,10 +101,10 @@ function Recall({route,navigation}) {
         <div onClick={flip} className={(isQuestionSide ? styles.recall_question:styles.recall_answer)}>
           <div className={styles.flashcard} key="{cards.length && cards[index].id}">
             <div className={styles.question_side}>{cards.length && cards[index].question}
-              <img className={styles.flashcard_images} src={cards.length && "http:\/\/localhost:8000"+cards[index].question_image}/>
+              <SetImage src={cards.length && cards[index].question_image}/>
             </div>
             <div className={styles.answer_side}>{isAnswerShown && cards.length && cards[index].answer}
-              <img className={styles.flashcard_images} src={cards.length && "http:\/\/localhost:8000"+cards[index].question_image}/>
+              <SetImage src={cards.length && cards[index].answer_image}/>
             </div>
           </div>
         </div>
@@ -120,17 +116,17 @@ function Recall({route,navigation}) {
             Count: {confidenceArray[0]}
           </div>
           <div className={styles.recall_conf_two} 
-            onClick={() => {increaseConfidence(1)}}>
+            onClick={() => {increaseConfidence(0.3)}}>
             Remembered parts of the answer<br/>
             Count: {confidenceArray[1]}
           </div>
             <div className={styles.recall_conf_three} 
-            onClick={() => {increaseConfidence(2)}}>
+            onClick={() => {increaseConfidence(0.6)}}>
             Remembered the answer after a while<br/>
             Count: {confidenceArray[2]}
           </div>
             <div className={styles.recall_conf_four} 
-            onClick={() => {increaseConfidence(3)}}>
+            onClick={() => {increaseConfidence(1)}}>
             Remembered the answer quickly<br/>
             Count: {confidenceArray[3]}
           </div>

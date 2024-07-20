@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,6 +81,8 @@ WSGI_APPLICATION = 'revision_mate.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
+    #"default": dj_database_url.parse("postgresql://postgres.utjexxmotisxiyzrjcbo:OLgSL1vHDQmuy5q0@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres")
+    
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'revision_mate',
@@ -141,7 +144,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 ALLOWED_HOSTS = [
-    'localhost',
+    'localhost', '.vercel.app'
 ]
 
 CORS_ORIGIN_WHITELIST = [

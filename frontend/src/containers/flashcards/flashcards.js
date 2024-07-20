@@ -20,6 +20,7 @@ function Flashcards({route,navigation}) {
   const [index, setIndex] = useState(0);
   const [search, setSearch] = useState("");
   const [creatorId, setCreatorId] = useState(-1);
+  const [helpMessage, setHelpMessage] = useState("");
   const navigate = useNavigate();
   const isLoggedIn = useSelector(selectUser);
   const { state } = useLocation();
@@ -74,7 +75,16 @@ function Flashcards({route,navigation}) {
 
   // Go to test page
   const goTest = () => {
-    navigate("/recall", {state:{id:id}});
+    navigate("/recall", {state:{id:id, deckName:deckName}});
+  }
+
+  // Reset deck confidence
+  const reset = () => {
+    axios.delete("/confidence", {
+      params: {deckId:id},  headers: {
+      "X-CSRFToken": getCSRF()
+      }
+    }).then(response=>setHelpMessage(response.data.success));
   }
 
   // Got to next question
@@ -93,7 +103,6 @@ function Flashcards({route,navigation}) {
 
   // Set image
   const SetImage = ({src}) => {
-    console.log(src);
     if (src)
       return <img className={styles.flashcard_images} src={"http:\/\/localhost:8000"+src}/>
   }
@@ -120,9 +129,11 @@ function Flashcards({route,navigation}) {
         <Comments deckId={id}/>
       </div>
       <div className={styles.flashcard_container}>
+        <div className={styles.help}>{helpMessage}</div>
         <div className={styles.button_container_one}>
           <div className={styles.flashcards_deckname}>Deck: {deckName}</div>
           <div onClick={goTest} className={styles.test}>TEST</div>
+          <div onClick={reset} className={styles.reset}>RESET</div>
           {creatorId == isLoggedIn.id && <div onClick={shuffle} className={styles.edit}>EDIT</div>}
         </div>
         <div onClick={flip} className={(isQuestionSide ? styles.flashcard_question:styles.flashcard_answer)}>

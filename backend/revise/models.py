@@ -50,7 +50,13 @@ class Comment(models.Model):
 class Confidence(models.Model):
 	user = models.IntegerField()
 	flashcard = models.IntegerField()
-	confidence = models.IntegerField()
+	count = models.IntegerField()
+	confidence = models.DecimalField(max_digits=3, decimal_places=2)
+
+	class Meta:
+		constraints = [
+			models.UniqueConstraint(fields=['user', 'flashcard'], name='user confidence')
+		]
 
 # Database for friends
 class Friends(models.Model):
