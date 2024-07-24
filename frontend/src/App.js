@@ -11,7 +11,6 @@ import Login from "./containers/login/login";
 import Register from "./containers/register/register";
 import Logout from "./containers/logout/logout";
 import Flashcards from "./containers/flashcards/flashcards";
-import Deck from "./containers/deck/deck";
 import Summary from "./containers/summary/summary";
 import Decks from "./containers/decks/decks";
 import Create from "./containers/create/create";
@@ -33,8 +32,7 @@ function App() {
             <Route exact path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/flashcards" element={<Flashcards />} />
-            <Route path="/deck" element={<Deck />} /> 
+            <Route path="/flashcards" element={<Flashcards />} /> 
             <Route path="/summary" element={<Summary />} />
             <Route path="/logout" element={<Logout />}/>
             <Route path="/decks" element={<Decks />}/>

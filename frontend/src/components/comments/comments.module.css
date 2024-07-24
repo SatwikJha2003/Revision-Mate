@@ -1,11 +1,28 @@
-.rating {
-	font-family: "Nunito Sans";
+.comment {
+	background-color: #ededed;
+	margin: 5px 0 5px;
+	border-radius: 10px;
 }
 
-.star_unselected {
-	color: black;
+.comment_box {
+	border-radius: 5px;
+	resize: none;
+	width: 90%;
+	height: 100px;
 }
 
-.star_selected {
-	color: yellow;
+.comment_submit {
+	border-radius: 25px;
+	border: 0;
+	outline: 0;
+    padding: 20px; 
+    height: 15px;
+    width:  50%;
+    display: table-cell;
+}
+
+.comment_span {
+	font-size: 200%;
+	position: relative;
+	bottom: 12px;
 }

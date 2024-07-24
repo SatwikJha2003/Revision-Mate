@@ -35,7 +35,7 @@ function Comments({ deckId }) {
 
 	const commentsList = comments.map(c => <div key={c.id}
 		                                  	value={c.id}
-		                                  	className={styles.comment}>{c.comment}
+		                                  	className={styles.comment}>{c.username}: {c.comment}
 		                                   </div>);
 
 	return (
@@ -49,7 +49,9 @@ function Comments({ deckId }) {
 					value={comment}
 					onChange={e=>setComment(e.currentTarget.value)}
 				/>
-		      <button type="submit">Submit</button>
+		      <button type="submit" className={styles.comment_submit}>
+		      	<span className={styles.comment_span}>Submit</span>
+	          </button><br/>
 		    </form>
 		    {commentsList}
 		</div>

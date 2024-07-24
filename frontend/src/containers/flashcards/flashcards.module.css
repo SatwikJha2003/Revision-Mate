@@ -14,8 +14,10 @@ html {
 .flashcards_dashboard {
 	background-color: #b3ffb3;
 	width: 20%;
-	height: 100%;
+	min-height: 100%;
+	max-height: 853px;
 	font-size: 250%;
+	overflow-y: scroll;
 }
 
 .flashcards_ul {

@@ -31,8 +31,9 @@ function Login() {
         )
         navigate("/study");
       }
-      else
+      else{
         setErrorMessage(response.data.error);
+      }
     });
   }
 
@@ -42,6 +43,7 @@ function Login() {
 
   return (
     <main className={styles.login_main}>
+      <img src="logo.png" className={styles.logo}/>
       <h1 className={styles.login_header}>REVISION MATE</h1>
       <form id="login_form" className={styles.login_form} onSubmit={handleForm}>
         <CSRF />

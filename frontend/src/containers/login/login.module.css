@@ -16,6 +16,12 @@ html {
 	margin-top: 12%;
 }
 
+.logo {
+	height: 30%;
+	width: 30%;
+	float: left;
+}
+
 .login_header {
 	font-size: 500%;
 }

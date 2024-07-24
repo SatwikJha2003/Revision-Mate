@@ -22,6 +22,7 @@ function NavBar() {
 				<NavLink to="/study" className={styles.nav_link}>Study</NavLink>
 				<NavLink to="/create" className={styles.nav_link}>Create</NavLink>
 				<NavLink to="/decks" className={styles.nav_link}>Decks</NavLink>
+				<NavLink to="/summary" className={styles.nav_link}>Summary</NavLink>
 				<NavLink to="/logout" className={styles.nav_link}>Logout</NavLink>
 			</nav>
 		)

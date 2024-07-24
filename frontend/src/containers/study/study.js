@@ -61,13 +61,14 @@ function Study({route,navigation}) {
     getDecks();
   }, [])
 
-  const deckList = decks.slice(counter,counter + 12)
+  const deckList = decks.filter(element=>element.deck_name.toLowerCase().includes(search))
+                        .slice(counter,counter + 12)
                         .map(deck => <div key={deck.id}
                                       id={deck.id}
                                       value={deck.deck_name}
                                       className={styles.decks_deck}
-                                      onClick={changePage} >{deck.deck_name}&nbsp;
-                                      {new Date(deck.timestamp).toLocaleDateString(undefined, {hourCycle: "h23", hour:"2-digit", minute:"2-digit"})}
+                                      onClick={changePage} >{deck.deck_name}<br/>
+                                      {new Date(deck.timestamp).toLocaleDateString('en-GB', {hourCycle: "h23", hour:"2-digit", minute:"2-digit"})}
                                       </div>);
 
   if (!isLoggedIn)
@@ -75,8 +76,10 @@ function Study({route,navigation}) {
 
   return (
     <main className={styles.decks_main}>
-      Search: <input type="text" name="decks_search" className={styles.decks_search} 
-      onChange={e => setSearch(e.target.value.toLowerCase())}/>
+      <div className={styles.search}>
+        Search: <input type="text" name="decks_search" className={styles.decks_search}
+                  onChange={e => setSearch(e.target.value.toLowerCase())}/>
+      </div>
       <div className={styles.decks_container} >
         {deckList}
       </div>
