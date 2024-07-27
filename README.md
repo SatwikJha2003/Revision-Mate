@@ -56,5 +56,5 @@ DATABASES = {
 ## React frontend
 - In another command prompt, enter the ```frontend``` folder and run ```npm start```
 
-Video: https://drive.google.com/file/d/1Fllyh9HGw6KqcoRtUWa-uld31lPH1pQp/view?usp=sharing
+Video: https://drive.google.com/file/d/1Fllyh9HGw6KqcoRtUWa-uld31lPH1pQp/view?usp=sharing\n
 Give the app some time to load
