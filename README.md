@@ -22,7 +22,7 @@
 ```pytesseract.pytesseract.tesseract_cmd = r'C:\Users\{}\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'.format(username)```
 ## Database
 - Install PostgreSQL. Password is 12345. 
-- Open pgAdmin4 and create a database. (e.g. "revision_mate"). You can change settings in ```backeng/revision_mate/settings.py``` under DATABASES.
+- Open pgAdmin4 and create a database. (e.g. "revision_mate"). You can change settings in ```backend/revision_mate/settings.py``` under DATABASES.
 - If you wish to use sqlite3, comment the first default and uncomment the second default.
 
 ```
