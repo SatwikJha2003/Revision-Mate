@@ -30,9 +30,9 @@ DATABASES = {
     # Comment if you wish to use sqlite3
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'revision_mate',    #Change accordingly
-        'USER': 'postgres',         #Change accordingly
-        'PASSWORD': '12345',        #Change accordingly
+        'NAME': 'revision_mate',    # Change accordingly
+        'USER': 'postgres',         # Change accordingly
+        'PASSWORD': '12345',        # Change accordingly
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
