@@ -18,6 +18,7 @@
 - Enter the ```frontend``` folder and run ```npm install```
 ## Backend
 - ```pip install -r requirements.txt```
+- If there are issues, - ```pip install django``` and ```pip install numpy==1.26.4```
 - Install tesseract from https://github.com/UB-Mannheim/tesseract/wiki. Save it in the path ```C:\Users\<username>\AppData\Local\Programs\Tesseract-OCR\tesseract.exe``` if Windows. Else, change the path in ```backend/revise/utils.py``` line:
 ```pytesseract.pytesseract.tesseract_cmd = r'C:\Users\{}\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'.format(username)```
 ## Database
