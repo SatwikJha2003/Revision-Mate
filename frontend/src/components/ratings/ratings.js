@@ -27,7 +27,6 @@ function Ratings({ deckId, csrf }) {
         		"X-CSRFToken": csrf
 			}
 		}).then(response => {
-			console.log(response);
 	    	setRating(response.data["average rating"]);
 	    });
 	}

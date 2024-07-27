@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/session";
 import axios from "axios";
@@ -8,23 +8,14 @@ import Redirect from "../../components/redirect";
 
 import styles from "./create.module.css";
 
-function Create() {
+function Create({route,navigation}) {
   const isLoggedIn = useSelector(selectUser);
   const startingArray = [{question: "", answer: ""}];
   const [qaArray, setQaArray] = useState(startingArray);
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
-
-  const getQa = (event) => {
-    axios.get("/flashcards", {
-      //params: {deck_name:deckName}
-    }).then(response => {
-      setQaArray([...response.data])
-    });
-  }
-
-  const handleChange = (event) => {
-  }
+  const { state } = useLocation();
+  const { deckName } = state || {};
 
   const handleForm = (event) => {
     event.preventDefault();
@@ -63,16 +54,17 @@ function Create() {
     return <Redirect />;
 
   return (
-      <div className={styles.deck_container}>
-        <form id="flashcard_form" className={styles.deck_form_two} onSubmit={handleForm}>
+      <div className={styles.create_container}>
+        <form id="flashcard_form" className={styles.create_form} onSubmit={handleForm}>
           <CSRF />
-          <label className={styles.deck_label} htmlFor="deck_name">Deck name: </label><br/>
+          <label className={styles.deck_label} htmlFor="deck_name">Deck name: </label>
           <input type="text"
             name="deckname"
-            className={styles.login_input}
+            defaultValue={deckName}
+            className={styles.create_input}
           />
-          <label className={styles.deck_label} htmlFor="share">Share</label>
-          <input type="checkbox" name="share" value="share"/>
+          <label className={styles.deck_label} htmlFor="share">&nbsp;&nbsp;&nbsp;Share</label>
+          <input type="checkbox" name="share" value="share" className={styles.create_checkbox}/>
           {qaArray.map((element, i) => {
             return (
               <div className={styles.qa_pair} key={i} id={i}>
@@ -90,7 +82,6 @@ function Create() {
                     name={"question_image-"+i} 
                     id={"question_image-"+i} 
                     className={styles.attach_image}
-                    onChange={handleChange}
                   />
                   <br/>
                   <label className={styles.deck_label} htmlFor="answer">Answer: </label><br/>
@@ -107,15 +98,20 @@ function Create() {
                     name={"answer_image-"+i} 
                     id={"answer_image-"+i} 
                     className={styles.attach_image}
-                    onChange={handleChange}
                   />
                   <br/>
-                  <button type="button" onClick={removeInput}>-</button>
+                  <button type="button" onClick={removeInput} className={styles.create_button}>
+                    <span className={styles.create_span}>-</span>
+                  </button>
                 </div>
               )
           })}
-          <button type="button" onClick={addInput}>+</button>
-          <button type="submit">Finish</button>
+          <button type="button" onClick={addInput} className={styles.create_button}>
+            <span className={styles.create_span}>+</span>
+          </button>
+          <button type="submit" className={styles.create_button}>
+            <span className={styles.create_span}>Finish</span>
+          </button>
         </form>
         <div className={styles.create_error}>{errorMsg}</div>
       </div>

@@ -31,6 +31,7 @@ html {
 .decks_deck {
 	background-color: #b3b3ff;
 	border-radius: 10px;
+	font-size: 150%;
 }
 
 .decks_deck:hover {
@@ -59,4 +60,14 @@ html {
 
 .decks_next {
 	float: right;
+}
+
+.decks_filter {
+	font-size: 200%;
+	margin-top: 10px;
+}
+
+.decks_search {
+	font-size: 100%;
+	border-radius: 5px;
 }

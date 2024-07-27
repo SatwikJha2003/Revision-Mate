@@ -29,12 +29,26 @@ html {
 }
 
 .decks_deck {
+	display: flex;
 	background-color: #b3b3ff;
 	border-radius: 10px;
+	font-size: 200%;
+	justify-content: center;
+	align-items: center;
 }
 
 .decks_deck:hover {
 	background-color: #ffb3b3;
+}
+
+.search {
+	font-size: 200%;
+	border-radius: 5px;
+	margin-top: 10px;
+}
+
+.decks_search {
+	font-size: 100%;
 }
 
 .decks_button_container {

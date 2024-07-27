@@ -43,7 +43,7 @@ function Login() {
 
   return (
     <main className={styles.login_main}>
-      <img src="logo.png" className={styles.logo}/>
+      <img src="logo.png" alt="Revision Mate logo" className={styles.logo}/>
       <h1 className={styles.login_header}>REVISION MATE</h1>
       <form id="login_form" className={styles.login_form} onSubmit={handleForm}>
         <CSRF />

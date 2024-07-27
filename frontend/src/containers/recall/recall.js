@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/session";
@@ -10,12 +10,9 @@ import styles from "./recall.module.css";
 
 function Recall({route,navigation}) {
   const [cards, setCards] = useState([]);
-  const [deckName, setDeckName] = useState("");
   const [isQuestionSide, setQuestionSide] = useState(true);
   const [isAnswerShown, setAnswerShown] = useState(false);
   const [index, setIndex] = useState(0);
-  const [confidenceArray, setConfidenceArray] = useState([0,0,0,0])
-  const [confidence, setConfidence] = useState(new FormData());
   const isLoggedIn = useSelector(selectUser);
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,16 +41,6 @@ function Recall({route,navigation}) {
     setQuestionSide(!isQuestionSide);
   }
 
-  // Function to save confidence to database
-  const postConfidence = () => {
-    axios.post("/confidence/", confidence, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "X-CSRFToken": getCSRF()
-      }
-    })
-  }
-
   // Function to increment count of each confidence level
   const increaseConfidence = (i) => {
     const confidence = {
@@ -61,7 +48,7 @@ function Recall({route,navigation}) {
       confidence: i
     };
 
-    if (index+1 != cards.length) {
+    if (index+1 !== cards.length) {
       setQuestionSide(true);
       setAnswerShown(false);
       setIndex(index+1);
@@ -81,7 +68,6 @@ function Recall({route,navigation}) {
     document.body.className = styles.recall_body;
     const root = document.getElementById('root');
     root.style.cssText = "height: 100%;";
-    setConfidence();
     getFlashcards();
   }, []);
 
@@ -89,7 +75,7 @@ function Recall({route,navigation}) {
   const SetImage = ({src}) => {
     console.log(src);
     if (src)
-      return <img className={styles.flashcard_images} src={"http:\/\/localhost:8000"+src}/>
+      return <img className={styles.flashcard_images} alt="flashcard" src={"http://localhost:8000"+src}/>
   }
 
   if (!isLoggedIn)
@@ -113,22 +99,18 @@ function Recall({route,navigation}) {
           <div className={styles.recall_conf_one} 
             onClick={() => {increaseConfidence(0)}}>
             Could not remember the answer<br/>
-            Count: {confidenceArray[0]}
           </div>
           <div className={styles.recall_conf_two} 
             onClick={() => {increaseConfidence(0.3)}}>
             Remembered parts of the answer<br/>
-            Count: {confidenceArray[1]}
           </div>
             <div className={styles.recall_conf_three} 
             onClick={() => {increaseConfidence(0.6)}}>
             Remembered the answer after a while<br/>
-            Count: {confidenceArray[2]}
           </div>
             <div className={styles.recall_conf_four} 
             onClick={() => {increaseConfidence(1)}}>
             Remembered the answer quickly<br/>
-            Count: {confidenceArray[3]}
           </div>
         </div>) : ""}
       </div>

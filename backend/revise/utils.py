@@ -37,7 +37,6 @@ def select_flashcards(confidence, score, count):
 	flashcards = []
 	count_threshold = count["count__sum"]/len(confidence)
 	score_threshold = score["confidence__sum"]/len(confidence)
-	print(count_threshold)
 
 	for c in confidence:
 		if c.count < count_threshold/2:

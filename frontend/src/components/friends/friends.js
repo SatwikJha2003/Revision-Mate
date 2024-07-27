@@ -96,6 +96,13 @@ function Friends() {
 		getRequests();
 	}
 
+	useEffect(() => {
+		getFriends();
+		getRequests();
+		console.log("Fdsfds")
+	},[])
+
+
 	const friendsList = friendList.map(friend => <li key={friend.user_two}
 			                                  	  value={friend.user_two}
 			                                  	  className={styles.friend}

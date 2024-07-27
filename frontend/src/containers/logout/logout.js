@@ -1,8 +1,7 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../../features/session";
 import axios from "axios";
-import CSRF from "../../components/csrfGetter";
 import Redirect from "../../components/redirect";
 
 function Logout() {
@@ -25,7 +24,6 @@ function Logout() {
   }
 
   useEffect(() => {
-    const cookie = CSRF;
     const session = JSON.stringify({'withCredentials': true});
     axios.post("/logout/", session,{
       headers: {

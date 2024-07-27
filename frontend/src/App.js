@@ -1,9 +1,8 @@
-import React, { useEffect, useCallback } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react"
-import axios from "axios";
 import store from "./store";
 import "@fontsource/nunito-sans";
 

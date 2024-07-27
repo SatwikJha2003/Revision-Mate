@@ -45,3 +45,14 @@
 .friends_list li, .requests_list li {
   border-bottom: 1px solid lightgrey;
 }
+
+.request_form {
+  background-color: white;
+}
+
+.request_submit {
+  background-color: #f2f4f7;
+  border: none;
+  border-radius: 10px;
+  font-size: 100%;
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/session";
@@ -13,12 +13,10 @@ import styles from "./flashcards.module.css";
 
 function Flashcards({route,navigation}) {
   const [cards, setCards] = useState([]);
-  const [decks, setDecks] = useState([]);
   const [isQuestionSide, setQuestionSide] = useState(true);
   const [isAnswerShown, setAnswerShown] = useState(false);
   const [isShuffled, setShuffled] = useState(false);
   const [index, setIndex] = useState(0);
-  const [search, setSearch] = useState("");
   const [creatorId, setCreatorId] = useState(-1);
   const [helpMessage, setHelpMessage] = useState("");
   const navigate = useNavigate();
@@ -78,6 +76,11 @@ function Flashcards({route,navigation}) {
     navigate("/recall", {state:{id:id, deckName:deckName}});
   }
 
+  // Go to create
+  const goEdit = () => {
+    navigate("/create", {state:{deckName:deckName}});
+  }
+
   // Reset deck confidence
   const reset = () => {
     axios.delete("/confidence", {
@@ -104,7 +107,7 @@ function Flashcards({route,navigation}) {
   // Set image
   const SetImage = ({src}) => {
     if (src)
-      return <img className={styles.flashcard_images} src={"http:\/\/localhost:8000"+src}/>
+      return <img className={styles.flashcard_images} alt="flashcard" src={"http://localhost:8000"+src}/>
   }
 
   // Get user's decks
@@ -134,7 +137,7 @@ function Flashcards({route,navigation}) {
           <div className={styles.flashcards_deckname}>Deck: {deckName}</div>
           <div onClick={goTest} className={styles.test}>TEST</div>
           <div onClick={reset} className={styles.reset}>RESET</div>
-          {creatorId == isLoggedIn.id && <div onClick={shuffle} className={styles.edit}>EDIT</div>}
+          {creatorId === isLoggedIn.id && <div onClick={goEdit} className={styles.edit}>EDIT</div>}
         </div>
         <div onClick={flip} className={(isQuestionSide ? styles.flashcard_question:styles.flashcard_answer)}>
           <div className={styles.flashcard} key="{cards.length && cards[index].id}">

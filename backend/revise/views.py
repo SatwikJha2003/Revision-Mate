@@ -112,21 +112,11 @@ class FlashcardsView(viewsets.ModelViewSet):
         flashcards = FlashcardSerializer(flashcards, many=True)
         return Response(flashcards.data)
 
-    def create(self, request):
-        deck_name = request.data["deck_name"]
-        question = request.data["question"]
-        answer = request.data["answer"]
-        deck = Deck.objects.get(deck_name=deck_name, owner=request.user.id)
-        flashcard = Flashcard(question=question,answer=answer,owner=request.user)
-        flashcard.save()
-        flashcard.deck.add(deck)
-        return Response("Success!")
-
 @method_decorator(csrf_protect, name='dispatch')
 class DecksView(viewsets.ModelViewSet):
     serializer_class = DeckSerializer
 
-    # Get decks. Include information such as creator, rating and number of views
+    # Get decks. Include information such as creator, rating, number of cards and number of views
     def list(self, request):
         decks = Deck.objects.all().filter(share=True)
         decks = DeckSerializer(decks, many=True)
@@ -139,39 +129,21 @@ class DecksView(viewsets.ModelViewSet):
 
             # Get rating among users who rated
             average_rating = history.exclude(rating=0).aggregate(Avg("rating"))["rating__avg"]
-            deck["rating"] = average_rating
+            if average_rating:
+                deck["rating"] = f'{average_rating:.2f}'
+            else:
+                deck["rating"] = average_rating
+
+            # Get number of cards
+            cards = Deck.objects.get(id=deck["id"])
+            cards = cards.flashcard_set.all()
+            deck["size"] = cards.count()
 
             # Get number of views
             views = history.count()
             deck["views"] = views
 
         return Response(decks.data)
-
-    def create(self, request):
-        try:
-            deck_name = request.data["deck_name"]
-            if deck_name == "":
-                return Response("Deck name cannot be empty!")
-
-            if "share" in request.data.keys() and request.data["share"] == "protected":
-                deck = Deck(deck_name=deck_name, owner=request.user, share="protected")
-            else:
-                deck = Deck(deck_name=deck_name, owner=request.user)
-            deck.save()
-            return Response("Success!")
-        except IntegrityError:
-            return Response("You already have a deck of this name!")
-
-    def delete(self, request):
-        deck_name = request.data["deck_name"]
-        deck_id = Deck.objects.filter(deck_name=deck_name, owner_id=request.user.id).delete()
-        return Response("Success!")
-
-    def patch(self, request):
-        deck_name = request.data["deck_name"]
-        share = request.data["share"]
-        deck = Deck.objects.filter(deck_name=deck_name, owner_id=request.user.id).update(share=share)
-        return Response("Success!")
 
 class DeckMakingView(viewsets.ViewSet):
     serializer_class = FileUploadSerializer
@@ -192,9 +164,15 @@ class DeckMakingView(viewsets.ViewSet):
         if not deck_name:
             return Response({"error":"Deck name required!"})
 
+        # Find deck
+        deck = Deck.objects.filter(deck_name=deck_name, owner=request.user)
+        if deck:
+            deck = deck[0]
+
         # Create deck
-        deck = Deck(deck_name=deck_name, owner=request.user, share=share)
-        deck.save()
+        if not deck:
+            deck = Deck(deck_name=deck_name, owner=request.user, share=share)
+            deck.save()
 
         # Create flashcards
         for i in range(len(question)):
@@ -212,7 +190,6 @@ class HistoryView(viewsets.ViewSet):
         user = request.query_params["user"]
         if user == "-1":
             user = request.user.id
-        print(user)
         deckIds = []
         times = []
         decks = History.objects.all().filter(user=user).order_by("deck")
@@ -330,7 +307,10 @@ class RatingsView(viewsets.ViewSet):
         history = History.objects.all().filter(deck=deckId).exclude(rating=0)
         average_rating = history.aggregate(Avg("rating"))["rating__avg"]
 
-        return Response({"success":"Ratings retrieved", "user rating":userRating, "average rating":average_rating})
+        if average_rating:
+            return Response({"success":"Ratings retrieved", "user rating":userRating, "average rating":f'{average_rating:.2f}'})
+        else:
+            return Response({"success":"Ratings retrieved", "user rating":userRating, "average rating":average_rating})
 
     def post(self, request):
         deckId = request.data["deckId"]
@@ -343,9 +323,11 @@ class RatingsView(viewsets.ViewSet):
             history.save()
 
         # Get new average rating
-        average_rating = History.objects.all().filter(deck=deckId).aggregate(Avg("rating"))["rating__avg"]
-        print(average_rating)
-        return Response({"success":"Rating updated", "average rating":average_rating})
+        average_rating = History.objects.all().filter(deck=deckId).exclude(rating=0).aggregate(Avg("rating"))["rating__avg"]
+        if average_rating:
+            return Response({"success":"Ratings retrieved", "user rating":userRating, "average rating":f'{average_rating:.2f}'})
+        else:
+            return Response({"success":"Ratings retrieved", "user rating":userRating, "average rating":average_rating})
 
 class CommentsView(viewsets.ViewSet):
 
@@ -359,7 +341,7 @@ class CommentsView(viewsets.ViewSet):
             username = User.objects.filter(id=username)
             username = username[0].username
             comment["username"] = username
-            
+
         return Response({"success":"Comments retrieved", "comments":comments.data})
 
     def create(self, request):
@@ -449,13 +431,3 @@ class SummaryView(viewsets.ViewSet):
             file_text = data.decode()
         summary = utils.summarize(file_text)
         return Response((file_text,summary))
-
-class DeleteUserView(viewsets.ViewSet):
-
-    def list(self, request):
-        return Response("")
-
-    def delete(self, request):
-        user = self.request.user
-        user = User.objects.filter(id=user.id).delete()
-        return Response("Success!")
