@@ -1,0 +1,58 @@
+.friends {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 150%;
+  width: 25%;
+}
+
+.toggle_friends, .toggle_requests {
+  background-color: #b3b3ff;
+  border: 0;
+  border-radius: 5px;
+  font-size: 150%;
+  width: 50%;
+}
+
+.toggle_friends:hover, .toggle_requests:hover {
+  background-color: #ffb3b3;
+}
+
+.toggle_friends_select, .toggle_requests_select {
+  background-color: #ffb3b3;
+  border: 0;
+  border-radius: 5px;
+  font-size: 150%;
+  width: 50%;
+}
+
+
+.toggle_list, .toggle_search {
+  background-color: #b3b3ff;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 50%;
+}
+
+.friends_list, .requests_list {
+  background-color: white;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.friends_list li, .requests_list li {
+  border-bottom: 1px solid lightgrey;
+}
+
+.request_form {
+  background-color: white;
+}
+
+.request_submit {
+  background-color: #f2f4f7;
+  border: none;
+  border-radius: 10px;
+  font-size: 100%;
+}

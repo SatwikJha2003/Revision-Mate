@@ -1,0 +1,73 @@
+html {
+	min-height: 100%;
+	display: grid;
+}
+
+.deck_body {
+	font-family:  "Nunito Sans";
+	background-color: #b3ffb3;
+	min-height: 100%;
+	min-width: 100%;
+}
+
+.decks_main {
+	height: 90%;
+}
+
+.decks_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 20%);
+  grid-auto-rows: 200px;
+  grid-gap: 20px;
+  justify-content: center;
+  margin-top: 1%;
+}
+
+.add_deck {
+	background-color: #ffb3b3;
+	border-radius: 10px;
+}
+
+.decks_deck {
+	background-color: #b3b3ff;
+	border-radius: 10px;
+	font-size: 150%;
+}
+
+.decks_deck:hover {
+	background-color: #ffb3b3;
+}
+
+.decks_button_container {
+	position: absolute;
+	width: 40%;
+	margin: auto;
+	bottom: 1%;
+	left: 30%;
+}
+
+.decks_next, .decks_previous {
+	display: flex;
+	font-weight: bold;
+	font-size: 125%;
+	background-color: #b3b3ff;
+	border-radius: 15px;
+	height: 50px;
+	width: 150px;
+	align-items: center;
+    justify-content: center;
+}
+
+.decks_next {
+	float: right;
+}
+
+.decks_filter {
+	font-size: 200%;
+	margin-top: 10px;
+}
+
+.decks_search {
+	font-size: 100%;
+	border-radius: 5px;
+}

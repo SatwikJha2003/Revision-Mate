@@ -1,0 +1,157 @@
+html {
+	height: 100%;
+}
+
+.recall_body {
+	font-family:  "Nunito Sans";
+	height: 100%;
+}
+
+.recall_main {
+	height: 92%;
+}
+
+.recall_dashboard {
+	background-color: #b3ffb3;
+	width: 20%;
+	height: 100%;
+	font-size: 250%;
+}
+
+.recall_confidence {
+	padding-right: 19%;
+}
+
+.recall_tooltip {
+	display: inline;
+	font-size: 50%;
+	font-weight: bold;
+}
+
+.recall_tooltip_text {
+	visibility: hidden;
+	position: absolute;
+	background-color: #ffb3b3;
+	z-index: 1;
+	border-radius: 10px;
+}
+
+.recall_tooltip:hover .recall_tooltip_text {
+	visibility: visible;
+}
+
+.recall_confidence_text {
+	text-align: center;
+}
+
+.recall_confidence_container {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, 30%);
+	grid-gap: 5%;
+}
+
+.recall_confidence_3, .recall_confidence_2, .recall_confidence_1 {
+	background-color: #ffb3ff;
+	text-align: center;
+}
+
+.recall_ul {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+.recall_container {
+	width: 70%;
+	margin: auto;
+}
+
+.recall_question {
+    height: 576px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+}
+
+.recall_answer {
+    height: 576px;
+    transform: rotateY(180deg);
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+}
+
+.flashcard {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    font-size: 500%;
+    margin-top: 5%;
+}
+
+.flashcard_images {
+	max-width: 70%;
+	max-height: 70%;
+}
+
+.question_side, .answer_side {
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+    position: absolute;
+    backface-visibility: hidden;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.question_side {
+  background-color: #c5f6fc;
+}
+
+.answer_side {
+    background-color: #c5fccf;
+    transform: rotateY(180deg);
+}
+
+.recall_confidence {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, 22%);
+	grid-gap: 4%;
+	font-size: 200%;
+	margin-top: 2%;
+}
+
+.recall_conf_one, .recall_conf_two, .recall_conf_three, .recall_conf_four {
+    text-align: center;
+    border-radius: 5px;
+}
+
+.recall_conf_one {
+	background-color: red;
+}
+
+.recall_conf_two {
+	background-color: orange;
+}
+
+.recall_conf_three {
+	background-color: yellow;
+}
+
+.recall_conf_four {
+	background-color: lightgreen;
+}
+
+.next, .previous, .shuffle {
+	display: flex;
+	font-weight: bold;
+	font-size: 125%;
+	background-color: #b3ffb3;
+	border-radius: 25px;
+	height: 50px;
+	width: 150px;
+	align-items: center;
+    justify-content: center;
+}

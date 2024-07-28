@@ -1,0 +1,74 @@
+html {
+	min-height: 100%;
+	display: grid;
+}
+
+.login_body {
+	font-family:  "Nunito Sans";
+	background-color: #b3ffb3;
+	min-height: 100%;
+	min-width: 100%;
+}
+
+.login_main {
+	width: 40%;
+	margin: auto;
+	margin-top: 12%;
+}
+
+.logo {
+	height: 30%;
+	width: 30%;
+	float: left;
+}
+
+.login_header {
+	font-size: 500%;
+}
+
+.login_form {
+	display: grid;
+	grid-template-columns: max-content max-content;
+    grid-gap:5px;
+}
+
+.login_label {
+	font-size: 200%;
+	font-weight: bold;
+    display: table-cell;
+    text-align: right;
+    margin-top: 4%;
+}
+
+.login_input {
+	border-radius: 25px;
+	font-size: 150%;
+	border: 0;
+	outline: 0;
+    padding: 20px; 
+    height: 15px;
+    width: 200%;
+    display: table-cell;
+}
+
+.login_submit {
+	border-radius: 25px;
+	border: 0;
+	outline: 0;
+    padding: 20px; 
+    height: 15px;
+    width:  50%;
+    display: table-cell;
+}
+
+.login_span {
+	font-weight: bold;
+	font-size: 200%;
+	position: relative;
+	bottom: 12px;
+}
+
+.login_error {
+	font-size: 150%;
+	font-weight: bold;
+}
